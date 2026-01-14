@@ -95,6 +95,14 @@ class User
                 $this->role = $newRole;
                 $this->updatedAt = new \DateTime();
         }
+
+        /**
+         * > Método de negocio: Verificar si es administrador...
+         */
+        public function isAdmin(): bool
+        {
+                return $this->role = 'Admin';
+        }
 }
 
 ?>
