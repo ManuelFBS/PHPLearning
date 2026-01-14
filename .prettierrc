@@ -1,0 +1,22 @@
+{
+        "trailingComma": "es5",
+        "tabWidth": 8,
+        "semi": true,
+        "singleQuote": true,
+        "printWidth": 80,
+        "plugins": ["@prettier/plugin-php"],
+        "overrides": [
+                {
+                        "files": ["*.php", "*.phtml"],
+                        "options": {
+                                "parser": "php",
+                                "tabWidth": 8,
+                                "phpVersion": "8.2",
+                                "trailingCommaPHP": true,
+                                "braceStyle": "psr-2",
+                                "singleQuote": true,
+                                "printWidth": 80
+                        }
+                }
+        ]
+}
