@@ -2,9 +2,7 @@
 
 namespace Domain\UseCases\User;
 
-use Domain\Entities\User;
 use Domain\Repositories\UserRepositoryInterface;
-use PDOException;
 
 /**
  * ~ Caso de uso: Actualizar un usuario...
