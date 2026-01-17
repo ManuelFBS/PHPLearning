@@ -101,7 +101,7 @@ class User
          */
         public function isAdmin(): bool
         {
-                return $this->role = 'Admin';
+                return $this->role === 'Admin';
         }
 }
 
