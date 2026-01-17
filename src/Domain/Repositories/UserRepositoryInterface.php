@@ -12,7 +12,7 @@ use Domain\Entities\User;
 interface UserRepositoryInterface
 {
         // * Guardar nuevo usuario...
-        public function save(User $user): user;
+        public function save(User $user): bool;
 
         // * Buscar usuario por nombre de usuario...
         public function findByUsername(string $username): ?User;
