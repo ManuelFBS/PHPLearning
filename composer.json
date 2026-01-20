@@ -1,0 +1,10 @@
+{
+    "name": "kunma/php-learning",
+    "description": "Proyecto basado en PHP + MySQL en Clean Architecture.",
+    "autoload": {
+        "psr-4": {
+            "Kunma\\PhpLearning\\": "src/"
+        }
+    },
+    "require": {}
+}
