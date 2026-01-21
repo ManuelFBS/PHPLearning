@@ -69,7 +69,7 @@ class Professor
         // * Setters de validación...
         public function updateNames(string $names): void
         {
-                if (trim($names) === null) {
+                if (trim($names) === '') {
                         throw new \InvalidArgumentException('Los nombres NO pueden estar vacíos...');
                 }
 
@@ -78,7 +78,7 @@ class Professor
 
         public function updateLastNames(string $lastNames): void
         {
-                if (trim($lastNames) === null) {
+                if (trim($lastNames) === '') {
                         throw new \InvalidArgumentException('Los apellidos NO pueden estar vacíos...');
                 }
 
