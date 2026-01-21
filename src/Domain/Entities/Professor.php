@@ -67,12 +67,46 @@ class Professor
         }
 
         // * Setters de validación...
+        public function updateNames(string $names): void
+        {
+                if (trim($names) === null) {
+                        throw new \InvalidArgumentException('Los nombres NO pueden estar vacíos...');
+                }
+        }
+
+        public function updateLastNames(string $lastNames): void
+        {
+                if (trim($lastNames) === null) {
+                        throw new \InvalidArgumentException('Los apellidos NO pueden estar vacíos...');
+                }
+        }
+
+        public function updateBirthDate(\DateTime $birthDate): void
+        {
+                $this->birthDate = $birthDate;
+        }
+
         public function updateEmail(string $email): void
         {
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         throw new \InvalidArgumentException('Email no válido...');
                 }
                 $this->email = $email;
+        }
+
+        public function updatePhone(string $phone): void
+        {
+                if ($phone !== null && !preg_match('/^[0-9+\-\s]{6,20}$/', $phone)) {
+                        throw new \InvalidArgumentException('Teléfono NO válido...');
+                }
+                $this->phone = $phone;
+        }
+
+        public function updateSubjects(string $subjects): void
+        {
+                if (trim($subjects) === '') {
+                        throw new \InvalidArgumentException('Las asignaturas NO pueden estar vacías...');
+                }
         }
 }
 
