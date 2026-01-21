@@ -33,11 +33,11 @@ class UpdateProfessorUseCase
         public function execute(
                 string $dni,
                 ?string $names = null,
-                ?string $lastNames,
-                ?\DateTime $birthDate,
-                ?string $email,
-                ?string $phone,
-                ?string $subjects
+                ?string $lastNames = null,
+                ?\DateTime $birthDate = null,
+                ?string $email = null,
+                ?string $phone = null,
+                ?string $subjects = null
         ): array {
                 // > 1. Validar formato del DNI...
                 if (!preg_match('/^\d{8,10}$/', $dni)) {
@@ -58,22 +58,12 @@ class UpdateProfessorUseCase
                 ) {
                         return [
                                 'success' => false,
-                                'message' => 'Debe proporcionar al menos un campo para actualizar (password o rol)...',
+                                'message' => 'Debe proporcionar al menos un campo para actualizar...',
                                 'data' => null
                         ];
                 }
 
-                // > 3. Verificar que el DNI exista en profesores, también...
-                $exists = $this->professorRepository->exists($dni);
-                if (!$exists) {
-                        return [
-                                'success' => false,
-                                'message' => 'El DNI no se encuentra en la base de datos...',
-                                'data' => null
-                        ];
-                }
-
-                // > 4. Buscar la entidad (objeto)...
+                // > 3. Buscar la entidad (objeto)...
                 $professor = $this->professorRepository->findByDni($dni);
                 if ($professor === null) {
                         return [
@@ -83,7 +73,7 @@ class UpdateProfessorUseCase
                         ];
                 }
 
-                // > 5. Validaciones y actualizaciones usando las reglas de la entidad...
+                // > 4. Validaciones y actualizaciones usando las reglas de la entidad...
                 try {
                         if ($names !== null) {
                                 $professor->updateNames($names);
@@ -112,7 +102,7 @@ class UpdateProfessorUseCase
                         ];
                 }
 
-                // > 6. Los cambios persisten...
+                // > 5. Los cambios persisten...
                 $updated = $this->professorRepository->update($professor);
 
                 return $updated
