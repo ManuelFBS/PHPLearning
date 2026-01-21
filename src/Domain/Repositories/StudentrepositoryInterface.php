@@ -12,6 +12,7 @@ interface StudentRepositoryInterface
         public function update(Student $student): bool;
         public function delete(string $dni): bool;
         public function exists(string $dni): bool;
+        public function emailExists(string $email): bool;
 }
 
 ?>
