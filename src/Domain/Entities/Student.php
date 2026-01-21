@@ -84,6 +84,61 @@ Class Student
         }
 
         // * Métodos de negocio...
+        public function updateNames(string $names): void
+        {
+                if (trim($names) === '') {
+                        throw new \InvalidArgumentException('Los nombres NO pueden estar vacíos...');
+                }
+
+                $this->names = $names;
+        }
+
+        public function updateLastNames(string $lastNames): void
+        {
+                if (trim($lastNames) === '') {
+                        throw new \InvalidArgumentException('Los apellidos NO pueden estar vacíos...');
+                }
+
+                $this->lastNames = $lastNames;
+        }
+
+        public function updateBirthDate(\DateTime $birthDate): void
+        {
+                $this->birthDate = $birthDate;
+        }
+
+        public function updateEmail(string $email): void
+        {
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        throw new \InvalidArgumentException('Email no válido...');
+                }
+
+                $this->email = $email;
+        }
+
+        public function updatePhone(?string $phone): void
+        {
+                if ($phone !== null && !preg_match('/^[0-9+\-\s]{6,20}$/', $phone)) {
+                        throw new \InvalidArgumentException('Teléfono NO válido...');
+                }
+
+                $this->phone = $phone;
+        }
+
+        public function updateDateEntry(\DateTime $dateEntry): void
+        {
+                $this->dateEntry = $dateEntry;
+        }
+
+        public function updateSubjects(string $subjects): void
+        {
+                if (trim($subjects) === '') {
+                        throw new \InvalidArgumentException('Las asignaturas NO pueden estar vacías...');
+                }
+
+                $this->subjects = $subjects;
+        }
+
         public function updateSemester(int $semester): void
         {
                 if ($semester < 1 || $semester > 10) {
