@@ -18,6 +18,12 @@ class DeleteProfessorUseCase
                 $this->professorRepository = $professorRepository;
         }
 
+        /**
+         * * Ejecutar el caso de uso de eliminación...
+         *
+         * @param string dni Representa el DNI (Documento Nacional de Identidad) de un profesor.
+         * @return array ['success' => bool, 'message' => string, 'data' => null]
+         */
         public function execute(string $dni): array
         {
                 // > 1. Buscar el profesor por su DNI...
