@@ -43,9 +43,40 @@ if ($page === 'login') {
                 }
         }
 
-        // include __DIR__."/../"
+        include __DIR__ . '/../Views/Auth/login.php';
 } else {
-        //
+        // > Cargar el layout del dashboard...
+        include __DIR__ . '/../Views/Layouts/header.php';
+        include __DIR__ . '/../Views/Layouts/sidebar.php';
+        echo '<div class="content p-4">';
+
+        // > Buscar la vista...
+        $possiblePaths = [
+                __DIR__ . "/../Views/Dashboard/Professors/{$page}.php",
+                __DIR__ . "/../Views/Dashboard/Students/{$page}.php",
+                __DIR__ . "/../Views/Dashboard/Users/{$page}.php",
+                __DIR__ . "/../Views/Dashboard/{$page}.php",
+        ];
+
+        $viewPath = null;
+        foreach ($possiblePaths as $path) {
+                if (file_exists($path)) {
+                        $viewPath = $path;
+                        break;
+                }
+        }
+
+        if ($viewPath) {
+                // > Inyectar controladores en las vistas si es necesario...
+                $userController = Container::getUserController();
+                include $viewPath;
+        } else {
+                echo '<h2>Bienvenido al sistema Unipro 1.0</h2><p>Selecciona una opción del menú.</p>';
+        }
+
+        echo '</div>';
+
+        include __DIR__ . '/../Views/Layouts/footer.php';
 }
 
 ?>
