@@ -173,6 +173,20 @@ class StudentRepository implements StudentRepositoryInterface
                 }
         }
 
+        public function emailExists(string $email): bool
+        {
+                try {
+                        $db = $this->connection->connect();
+                        $query = 'SELECT id FROM students WHERE email = ?';
+                        $stmt = $db->prepare($query);
+                        $stmt->execute([$email]);
+
+                        return $stmt->rowCount() > 0;
+                } catch (\PDOException $e) {
+                        return false;
+                }
+        }
+
         // * Mapear datos de la base de datos a la entidad User...
         private function mapToEntity(array $data): student
         {

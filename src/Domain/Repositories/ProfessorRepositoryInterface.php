@@ -12,8 +12,7 @@ interface ProfessorRepositoryInterface
         public function update(Professor $professor): bool;
         public function delete(string $dni): bool;
         public function exists(string $dni): bool;
-
-        // public function emailExists(string $email): bool;
+        public function emailExists(string $email): bool;
 }
 
 ?>

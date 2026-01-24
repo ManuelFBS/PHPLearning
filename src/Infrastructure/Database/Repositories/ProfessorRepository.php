@@ -155,6 +155,21 @@ class ProfessorRepository implements ProfessorRepositoryInterface
                         $query = 'SELECT id FROM professors WHERE dni = ?';
                         $stmt = $db->prepare($query);
                         $stmt->execute([$dni]);
+
+                        return $stmt->rowCount() > 0;
+                } catch (\PDOException $e) {
+                        return false;
+                }
+        }
+
+        public function emailExists(string $email): bool
+        {
+                try {
+                        $db = $this->connection->connect();
+                        $query = 'SELECT id FROM professors WHERE email = ?';
+                        $stmt = $db->prepare($query);
+                        $stmt->execute([$email]);
+
                         return $stmt->rowCount() > 0;
                 } catch (\PDOException $e) {
                         return false;
