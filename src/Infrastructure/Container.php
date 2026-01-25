@@ -24,6 +24,7 @@ use Infrastructure\Database\Repositories\UserRepository;
 use Presentation\Controllers\UserController;
 // * ---------------------------------------------------------------------------------------
 use Domain\UseCases\Auth\LoginUseCase;
+use Domain\UseCases\User\GetAllUsersUseCase;
 use Presentation\Controllers\AuthController;
 // * ---------------------------------------------------------------------------------------
 use Infrastructure\Database\Connection;
@@ -94,6 +95,12 @@ class Container
                 );
         }
 
+        // * Obtener el caso de uso para obtener todos los usuarios...
+        public static function getGetAllUsersUseCase(): GetAllUsersUseCase
+        {
+                return new GetAllUsersUseCase(self::getUserRepository());
+        }
+
         // * Obtener el caso de uso de obtener usuario...
         public static function getGetUserUseCase(): GetUserUseCase
         {
@@ -123,6 +130,7 @@ class Container
         {
                 return new UserController(
                         self::getCreateUserUseCase(),
+                        self::getGetAllUsersUseCase(),
                         self::getGetUserUseCase(),
                         self::getUpdateUserUseCase(),
                         self::getDeleteUserUseCase()
