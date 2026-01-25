@@ -94,7 +94,7 @@ class ProfessorController
                         ];
                 }
 
-                // > Aquí se llamaría a un caso de uso GetAllUsersUseCase...
+                // > Aquí se llamaría a un caso de uso GetAllProfessorsUseCase...
                 $result = $this->getAllProfessorsUseCase->execute();
 
                 return [
