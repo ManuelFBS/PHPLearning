@@ -4,7 +4,13 @@ namespace Infrastructure;
 
 // * ---------------------------------------------------------------------------------------
 use Domain\Repositories\ProfessorRepositoryInterface;
+use Domain\UseCases\Professor\CreateProfessorUseCase;
+use Domain\UseCases\Professor\DeleteProfessorUseCase;
+use Domain\UseCases\Professor\GetAllProfessorsUseCase;
+use Domain\UseCases\Professor\GetProfessorUseCase;
+use Domain\UseCases\Professor\UpdateProfessorUseCase;
 use Infrastructure\Database\Repositories\ProfessorRepository;
+use Presentation\Controllers\ProfessorController;
 // * ---------------------------------------------------------------------------------------
 use Domain\Repositories\StudentRepositoryInterface;
 use Infrastructure\Database\Repositories\StudentRepository;
