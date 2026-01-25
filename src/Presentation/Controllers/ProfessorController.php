@@ -103,6 +103,66 @@ class ProfessorController
                         'data' => $result['data']
                 ];
         }
+
+        public function show(string $dni): array
+        {
+                if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Admin') {
+                        return [
+                                'status' => 'error',
+                                'message' => 'No tienes permisos para realizar esta acción'
+                        ];
+                }
+
+                $result = $this->getProfessorUseCase->execute($dni);
+
+                return [
+                        'status' => $result['success'] ? 'success' : 'error',
+                        'message' => $result['message'],
+                        'data' => $result['data']
+                ];
+        }
+
+        public function update(string $dni): array
+        {
+                if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Admin') {
+                        return [
+                                'status' => 'error',
+                                'message' => 'No tienes permisos para realizar esta acción'
+                        ];
+                }
+
+                if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                        return [
+                                'status' => 'error',
+                                'message' => 'Método HTTP no permitido. Se requiere POST...'
+                        ];
+                }
+
+                $result = $this->updateProfessorUseCase->execute($dni);
+
+                return [
+                        'status' => $result['success'] ? 'success' : 'error',
+                        'message' => $result['message'],
+                        'data' => $result['data']
+                ];
+        }
+
+        public function destroy(string $dni): array
+        {
+                if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Admin') {
+                        return [
+                                'status' => 'error',
+                                'message' => 'No tienes permisos para realizar esta acción'
+                        ];
+                }
+
+                $result = $this->deleteProfessorUseCase->execute($dni);
+
+                return [
+                        'status' => $result['success'] ? 'success' : 'error',
+                        'message' => $result['message']
+                ];
+        }
 }
 
 ?>
