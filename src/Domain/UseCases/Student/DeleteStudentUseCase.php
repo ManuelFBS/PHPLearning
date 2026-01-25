@@ -8,7 +8,7 @@ use Domain\Repositories\StudentRepositoryInterface;
  * ~ Caso de uso: Eliminar un estudiante...
  * ~ Contiene toda la lógica de negocio para eliminar estudiante...
  */
-class DeleteProfessorUseCase
+class DeleteStudentUseCase
 {
         private StudentRepositoryInterface $studentRepository;
 
@@ -39,10 +39,10 @@ class DeleteProfessorUseCase
                 }
 
                 // > 3. Proceder a la eliminación del profesor...
-                $deleteProfessor = $this->professorRepository->delete($dni);
+                $deleteStudent = $this->studentRepository->delete($dni);
 
                 // > 4. Verificar si la eliminación fue exitosa...
-                if ($deleteProfessor) {
+                if ($deleteStudent) {
                         return [
                                 'success' => true,
                                 'message' => 'Profesor eliminado correctamente...',
