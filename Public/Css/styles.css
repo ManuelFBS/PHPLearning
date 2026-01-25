@@ -1,0 +1,87 @@
+/* Sidebar base */
+.sidebar {
+    width: 250px !important; /* *Forzar ancho fijo */
+    min-width: 250px !important; /* *También forzar min-width */
+    max-width: 250px !important; /* *Evitar que crezca */
+    min-height: 100vh;
+    color: white !important; /* *Forzar el color blanco */
+    position: fixed !important; /* *Forzar posición fija */
+    left: 0 !important;
+    top: 0 !important;
+    z-index: 100; /* *Asegurar que esté por encima */
+    box-sizing: border-box !important; /* *Incluir padding en el ancho total */
+    padding: 1rem !important; /* *Padding consistente (p-3 de Bootstrap = 1rem) */
+}
+
+/* *Contenido principal - Agregar margen izquierdo para compensar el sidebar */
+body > .content,
+.content {
+    margin-left: 250px !important; /* *Mismo ancho que el sidebar - FORZAR */
+    width: calc(100% - 250px) !important; /* *Ajustar ancho total - FORZAR */
+    min-height: 100vh; /* *Altura mínima completa */
+    position: relative; /* *Posición relativa para el contexto de z-index */
+    z-index: 1; /* *Z-index menor que el sidebar pero suficiente */
+    box-sizing: border-box !important; /* *Incluir padding en el ancho total */
+    padding: 1.5rem !important; /* *Padding consistente */
+}
+
+/* *Asegurar que el body no tenga margin que interfiera */
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden; /* *Evitar scroll horizontal */
+}
+
+/* *Ajustar el contenedor flex para que no interfiera */
+.d-flex {
+    position: relative; /* *Posición relativa para el contexto */
+}
+
+/* *Colores por Rol */
+.bg-admin {
+    background: linear-gradient(180deg, #ac1313 0%, #ef5350 100%); /* Rojo */
+}
+
+.bg-professor {
+    background: linear-gradient(180deg, #0b3baa 0%, #42a5f5 100%); /* Azul */
+}
+
+.bg-student {
+    background: linear-gradient(180deg, #16601a 0%, #66bb6a 100%); /* Verde */
+}
+
+/* *Asegurar que los enlaces sean visibles */
+.sidebar a {
+    color: white !important;
+    text-decoration: none;
+}
+
+.sidebar .nav-link {
+    color: white !important;
+}
+
+.sidebar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+/* *HR visible */
+.sidebar hr {
+    border-color: rgba(255, 255, 255, 0.3);
+    margin: 1rem 0;
+}
+
+/* *Estilos para la página de login con imagen de fondo */
+body.login-page {
+    background-image: url("../../Images/javier-trueba-iQPr1XkF5F0-unsplash_II.jpg");
+    background-size: contain; /* Cambia de "cover" a "contain" */
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #66acdd; /* Color de fondo para espacios */
+}
+
+body.login-page .card {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
+}
