@@ -1,10 +1,16 @@
 <?php
 
-// ~ Se importa el controlador de profesores...
-require_once __DIR__ . '/../../../App/Controllers/ProfessorController.php';
+// ~ Cargar el autoload de Composer (si no está ya cargado)
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
-// ~ Se llama el método getAll() del controlador...
-$response = ProfessorController::getAll();
+// ~ Importar las clases necesarias usando namespaces
+use Infrastructure\Container;
+
+// ~ Obtener el controlador desde el Container (Inyección de Dependencias)...
+$controller = Container::getProfessorController();
+
+// ~ Se llama el método getAll() del controlador (es un método de instancia, no estático)...
+$response = $controller->getAll();
 
 // * Se extrae la información de la respuesta...
 $status = $response['status'];
@@ -17,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                 $_POST['action'] === 'delete') {
         $dniToDelete = $_POST['dni'] ?? '';
         if (!empty($dniToDelete)) {
-                $deleteResponse = ProfessorController::destroy($dniToDelete);
+                // > Usar el controlador de instancia, no estático...
+                $deleteResponse = $controller->destroy($dniToDelete);
                 // > Se recarga la página para mostrar el mensaje
                 // > (o se podría usar JavaScript para no recargar)...
                 if ($deleteResponse['status'] === 'success') {

@@ -1,7 +1,10 @@
 <?php
 
-// * Se importa el controlador...
-require_once __DIR__ . '/../../../App/Controllers/ProfessorController.php';
+// ~ Cargar el autoload de Composer (si no está ya cargado)
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+// ~ Importar las clases necesarias usando namespaces
+use Infrastructure\Container;
 
 // * Se obtiene el DNI desde la URL...
 $dni = $_GET['dni'] ?? '';
@@ -12,8 +15,12 @@ if (empty($dni)) {
         exit;
 }
 
-// * Primero se obtienen los datos actuales del profesor para llenar el formulario...
-$response = ProfessorController::show($dni);
+// * Obtener el controlador desde el Container (Inyección de Dependencias)...
+$controller = Container::getProfessorController();
+
+// * Primero se obtienen los datos actuales del profesor para llenar el formulario
+// * (es un método de instancia, no estático)...
+$response = $controller->show($dni);
 $professor = $response['data'] ?? null;
 
 // * Si no existe el profesor, se muestra un error...
@@ -25,10 +32,11 @@ if (!$professor) {
 // * Se procesa el formulario si se envió por POST...
 $updateResponse = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $updateResponse = ProfessorController::update($dni);
+        // > Usar el controlador de instancia, no estático...
+        $updateResponse = $controller->update($dni);
         // > Si la actualización fue exitosa, se recargan los datos...
         if ($updateResponse['status'] === 'success') {
-                $response = ProfessorController::show($dni);
+                $response = $controller->show($dni);
                 $professor = $response['data'] ?? null;
         }
 }

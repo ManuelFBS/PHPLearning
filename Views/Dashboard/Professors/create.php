@@ -1,6 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../../../App/Controllers/ProfessorController.php';
+// ~ Cargar el autoload de Composer (si no está ya cargado)...
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+// ~ Importar las clases necesarias usando namespaces...
+use Infrastructure\Container;
 
 // ~ Solo el Admin puede estar aquí...
 if ($_SESSION['user_role'] !== 'Admin') {
@@ -8,8 +12,14 @@ if ($_SESSION['user_role'] !== 'Admin') {
     exit();
 }
 
-$controller = new ProfessorController();
-$response = $controller->store();
+// ~ Obtener el controlador desde el Container (Inyección de Dependencias)...
+$controller = Container::getProfessorController();
+
+// ~ Solo procesar el formulario si es POST...
+$response = null;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $response = $controller->store();
+}
 
 ?>
 
