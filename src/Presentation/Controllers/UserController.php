@@ -4,23 +4,27 @@ namespace Presentation\Controllers;
 
 use Domain\UseCases\User\CreateUserUseCase;
 use Domain\UseCases\User\DeleteUserUseCase;
+use Domain\UseCases\User\GetAllUsersUseCase;
 use Domain\UseCases\User\GetUserUseCase;
 use Domain\UseCases\User\UpdateUserUseCase;
 
 class UserController
 {
         private CreateUserUseCase $createUserUseCase;
+        private GetAllUsersUseCase $getAllUsersUseCase;
         private GetUserUseCase $getUserUseCase;
         private UpdateUserUseCase $updateUserUseCase;
         private DeleteUserUseCase $deleteUserUseCase;
 
         public function __construct(
                 CreateUserUseCase $createUserUseCase,
+                GetAllUsersUseCase $getAllUsersUseCase,
                 GetUserUseCase $getUserUseCase,
                 UpdateUserUseCase $updateUserUseCase,
                 DeleteUserUseCase $deleteUserUseCase
         ) {
                 $this->createUserUseCase = $createUserUseCase;
+                $this->getAllUsersUseCase = $getAllUsersUseCase;
                 $this->getUserUseCase = $getUserUseCase;
                 $this->updateUserUseCase = $updateUserUseCase;
                 $this->deleteUserUseCase = $deleteUserUseCase;
@@ -80,11 +84,12 @@ class UserController
                 }
 
                 // > Aquí se llamaría a un caso de uso GetAllUsersUseCase...
-                // Por ahora, se retorna un ejemplo...
+                $result = $this->getAllUsersUseCase->execute();
+
                 return [
-                        'status' => 'success',
-                        'message' => 'Listado de usuarios',
-                        'data' => []
+                        'status' => $result['success'] ? 'success' : 'error',
+                        'message' => $result['message'],
+                        'data' => $result['data']
                 ];
         }
 
