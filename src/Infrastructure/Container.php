@@ -49,6 +49,8 @@ class Container
                 return self::$connection;
         }
 
+        // * --------------------------------- OBTENCION DE LOS REPOSITORIOS -------------------------------------- * //
+
         // * Obtener el repositorio de usuarios...
         public static function getUserRepository(): UserRepositoryInterface
         {
@@ -79,11 +81,56 @@ class Container
                 return self::$studentRepository;
         }
 
+        // * ----------------------------------------- CASOS DE USO: Login ---------------------------------------------- * //
+
         // * Obtener el caso de uso de login...
         public static function getLoginUseCase(): LoginUseCase
         {
                 return new LoginUseCase(self::getUserRepository());
         }
+
+        // * -------------------------------------- CASOS DE USO: Professor ------------------------------------------- * //
+
+        public static function getCreateProfessorUseCase(): CreateProfessorUseCase
+        {
+                return new CreateProfessorUseCase(
+                        self::getProfessorRepository()
+                );
+        }
+
+        // * Obtener el caso de uso para obtener todos los profesores...
+        public static function getGetAllProfessorsUseCase(): GetAllProfessorsUseCase
+        {
+                return new GetAllProfessorsUseCase(
+                        self::getProfessorRepository()
+                );
+        }
+
+        // * Obtener el caso de uso de obtener profesor...
+        public static function getGetProfessorUseCase(): GetProfessorUseCase
+        {
+                return new GetProfessorUseCase(
+                        self::getProfessorRepository()
+                );
+        }
+
+        // * Obtener el caso de uso de actualizar profesor...
+        public static function getUpdateProfessorUseCase(): UpdateProfessorUseCase
+        {
+                return new UpdateProfessorUseCase(
+                        self::getProfessorRepository()
+                );
+        }
+
+        // * Obtener el caso de uso de eliminar usuario...
+        public static function getDeleteProfessorUseCase(): DeleteProfessorUseCase
+        {
+                return new DeleteProfessorUseCase(
+                        self::getProfessorRepository()
+                );
+        }
+
+        // * ----------------------------------------- CASOS DE USO: User ---------------------------------------------- * //
 
         // * Obtener el caso de uso de crear usuario...
         public static function getCreateUserUseCase(): CreateUserUseCase
@@ -98,26 +145,36 @@ class Container
         // * Obtener el caso de uso para obtener todos los usuarios...
         public static function getGetAllUsersUseCase(): GetAllUsersUseCase
         {
-                return new GetAllUsersUseCase(self::getUserRepository());
+                return new GetAllUsersUseCase(
+                        self::getUserRepository()
+                );
         }
 
         // * Obtener el caso de uso de obtener usuario...
         public static function getGetUserUseCase(): GetUserUseCase
         {
-                return new GetUserUseCase(self::getUserRepository());
+                return new GetUserUseCase(
+                        self::getUserRepository()
+                );
         }
 
         // * Obtener el caso de uso de actualizar usuario...
         public static function getUpdateUserUseCase(): UpdateUserUseCase
         {
-                return new UpdateUserUseCase(self::getUserRepository());
+                return new UpdateUserUseCase(
+                        self::getUserRepository()
+                );
         }
 
         // * Obtener el caso de uso de eliminar usuario...
         public static function getDeleteUserUseCase(): DeleteUserUseCase
         {
-                return new DeleteUserUseCase(self::getUserRepository());
+                return new DeleteUserUseCase(
+                        self::getUserRepository()
+                );
         }
+
+        // * ------------------------------- OBTENCION DE LOS CONTROLADORES ---------------------------------- * //
 
         // * Obtener el controlador de autenticación...
         public static function getAuthController(): AuthController
@@ -136,6 +193,21 @@ class Container
                         self::getDeleteUserUseCase()
                 );
         }
+
+        // * Obtener el controlador de profesores...
+        public static function getProfessorController(): ProfessorController
+        {
+                return new ProfessorController(
+                        self::getCreateProfessorUseCase(),
+                        self::getGetAllProfessorsUseCase(),
+                        self::getGetProfessorUseCase(),
+                        self::getUpdateProfessorUseCase(),
+                        self::getDeleteProfessorUseCase()
+                );
+        }
+
+        // * Obtener el controlador de estudiantes...
+        // public static function getStudentController(): StudentController {}
 }
 
 ?>
