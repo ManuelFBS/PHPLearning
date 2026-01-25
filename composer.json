@@ -3,7 +3,9 @@
     "description": "Proyecto basado en PHP + MySQL en Clean Architecture.",
     "autoload": {
         "psr-4": {
-            "Kunma\\PhpLearning\\": "src/"
+            "Presentation\\": "src/Presentation/",
+            "Infrastructure\\": "src/Infrastructure/",
+            "Domain\\": "src/Domain/"
         }
     },
     "require": {}
