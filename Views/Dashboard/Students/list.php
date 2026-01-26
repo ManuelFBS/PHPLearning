@@ -1,15 +1,21 @@
 <?php
 
-// ~ Se importa el controlador de estudiantes...
-require_once __DIR__ . '/../../../App/Controllers/StudentController.php';
+// ~ Cargar el autoload de Composer (si no está ya cargado)
+require_once __DIR__ . '/../../../vendor/autoload.php';
 
-// ~ Se llama el método getAll() del controlador...
-$response = StudentController::getAll();
+// ~ Importar las clases necesarias usando namespaces
+use Infrastructure\Container;
 
-// * Extraemos la información de la respuesta...
+// ~ Obtener el controlador desde el Container (Inyección de Dependencias)...
+$controller = Container::getStudentController();
+
+// ~ Se llama el método getAll() del controlador (es un método de instancia, no estático)...
+$response = $controller->getAll();
+
+// * Se extrae la información de la respuesta...
 $status = $response['status'];
 $message = $response['message'];
-$students = $response['data'] ?? [];  // * Si no existe 'data', usamos un array vacío...
+$professors = $response['data'] ?? [];  // > Si no existe 'data', usamos un array vacío...
 
 // * Se procesala eliminación si se envió por POST...
 if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
@@ -17,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
                 $_POST['action'] === 'delete') {
         $dniToDelete = $_POST['dni'] ?? '';
         if (!empty($dniToDelete)) {
-                $deleteResponse = StudentController::destroy($dniToDelete);
+                // > Usar el controlador de instancia, no estático...
+                $deleteResponse = $controller->destroy($dniToDelete);
                 // > Se recarga la página para mostrar el mensaje
                 // > (o se podría usar JavaScript para no recargar)...
                 if ($deleteResponse['status'] === 'success') {
