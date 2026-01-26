@@ -1,7 +1,10 @@
 <?php
 
-// ~ Se importa el controlador...
-require_once __DIR__ . '/../../../App/Controllers/UserController.php';
+// ~ Cargar el autoload de Composer (si no está ya cargado)
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+// ~ Importar las clases necesarias usando 'namespaces'...
+use Infrastructure\Container;
 
 // * Se obtiene el nombre de usuario desde la URL (ejemplo: ?page=Users/edit&user=usuarioabcd)...
 $userName = $_GET['user'] ?? '';
@@ -12,8 +15,11 @@ if (empty($userName)) {
         exit;
 }
 
-// * Primero se obtienen los datos actuales del usuario para llenar el formulario...
-$response = UserController::edit($userName);
+// * Obtener el controlador desde el Container (Inyección de Dependencias)...
+$controller = Container::getUserController();
+
+// * Primero se obtienen los datos actuales del usuario para llenar el
+$response = $controller->update($userName);
 $user = $response['data'] ?? null;
 
 // * Si no existe el usuario, se muestra un error...
@@ -25,10 +31,11 @@ if (!$user) {
 // * Se procesa el formulario si se envió por POST...
 $updateResponse = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $updateResponse = UserController::update($userName);
+        // > Usar el controlador de instancia, no estático...
+        $updateResponse = $controller->update($userName);
         // > Si la actualización fue exitosa, se recargan los datos actualizados...
         if ($updateResponse['status'] === 'success') {
-                $response = UserController::edit($userName);
+                $response = $controller->show($userName);
                 $user = $response['data'] ?? null;
         }
 }

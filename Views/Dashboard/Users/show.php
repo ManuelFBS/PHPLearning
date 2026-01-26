@@ -1,7 +1,10 @@
 <?php
 
-// ~ Se importa el controlador...
-require_once __DIR__ . '/../../../App/Controllers/UserController.php';
+// ~ Cargar el autoload de Composer (si no está ya cargado)
+require_once __DIR__ . '/../../../vendor/autoload.php';
+
+// ~ Importar las clases necesarias usando namespaces
+use Infrastructure\Container;
 
 // * Se obtiene el DNI desde la URL (ejemplo: ?page=users_show&userName=usuarioabcd)...
 $userName = $_GET['user'] ?? '';
@@ -12,8 +15,12 @@ if (empty($userName)) {
         exit;
 }
 
-// * Se llama al controlador para obtener los datos del profesor...
-$response = UserController::show($userName);
+// * Obtener el controlador desde el Container (Inyección de Dependencias)...
+$controller = Container::getUserController();
+
+// * Se llama al controlador para obtener los datos del profesor (es un método
+// * de instancia, no estático)...
+$response = $controller->show($userName);
 
 // * Se extrae la información...
 $status = $response['status'];
