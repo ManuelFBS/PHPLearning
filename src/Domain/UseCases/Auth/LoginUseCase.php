@@ -39,7 +39,8 @@ class LoginUseCase
                 }
 
                 // > 2. Verificar la contraseña (lógica de negocio en la entidad)...
-                if ($user->verifyPassword($password)) {
+                //    Si la contraseña NO coincide, devolvemos error (éxito solo cuando verifyPassword es true)...
+                if (!$user->verifyPassword($password)) {
                         return [
                                 'success' => false,
                                 'user' => null,

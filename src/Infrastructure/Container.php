@@ -42,9 +42,9 @@ use Infrastructure\Database\Connection;
 class Container
 {
         private static ?Connection $connection = null;
-        private static ?UserRepositoryInterface $userRepository;
-        private static ?ProfessorRepositoryInterface $professorRepository;
-        private static ?StudentRepositoryInterface $studentRepository;
+        private static ?UserRepositoryInterface $userRepository = null;
+        private static ?ProfessorRepositoryInterface $professorRepository = null;
+        private static ?StudentRepositoryInterface $studentRepository = null;
 
         // * Obtener la conexión a la base de datos (Singleton)...
         public static function getConnection(): Connection

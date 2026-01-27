@@ -15,6 +15,7 @@ $page = $_GET['page'] ?? 'login';
 if ($page === 'logout') {
         session_destroy();
         header('Location: ?page=login');
+        exit();
 }
 
 // * Verificar autenticación...
@@ -32,7 +33,7 @@ if ($page === 'login') {
         $error = '';
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $result = $authController->login(
-                        $_POST['user'] ?? '',
+                        $_POST['username'] ?? '',
                         $_POST['password'] ?? ''
                 );
                 if ($result['success']) {

@@ -18,8 +18,8 @@ function loanEnv($path)
 
         loanEnv(__DIR__ . '/../Config/.env');
 
-        define('BASE_URL', $_ENV['BASE_URL' ?: 'http://localhost/Projects/PHPLearning_In_CA/PHPLearning/']);
-        define('APP_NAME', $_ENV['APP_NAME']);
+        define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost/Projects/PHPLearning_In_CA/PHPLearning/');
+        define('APP_NAME', $_ENV['APP_NAME'] ?? 'Unipro');
 }
 
 ?>
