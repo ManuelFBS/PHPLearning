@@ -1,6 +1,6 @@
 <?php
 
-function loanEnv($path)
+function loadEnv($path)
 {
         if (!file_exists($path)) {
                 return;
@@ -15,11 +15,10 @@ function loanEnv($path)
                 [$name, $value] = explode('=', $line, 2);
                 $_ENV[trim($name)] = trim($value);
         }
-
-        loanEnv(__DIR__ . '/../Config/.env');
-
-        define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost/Projects/PHPLearning_In_CA/PHPLearning/');
-        define('APP_NAME', $_ENV['APP_NAME'] ?? 'Unipro');
 }
 
+loadEnv(__DIR__ . '/../../../Config/.env');
+
+define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost/Projects/PHPLearning_In_CA/PHPLearning/');
+define('APP_NAME', $_ENV['APP_NAME'] ?? 'Unipro');
 ?>
