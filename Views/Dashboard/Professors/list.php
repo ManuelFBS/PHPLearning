@@ -78,16 +78,13 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                         <tbody>
                                                 <?php foreach ($professors as $professor): ?>
                                                         <tr>
-                                                                <td><?php echo htmlspecialchars($professor['dni']); ?></td>
-                                                                <td><?php echo htmlspecialchars($professor['names']); ?></td>
-                                                                <td><?php echo htmlspecialchars($professor['lastNames']); ?></td>
+                                                                <td><?php echo htmlspecialchars($professor->getDni()); ?></td>
+                                                                <td><?php echo htmlspecialchars($professor->getNames()); ?></td>
+                                                                <td><?php echo htmlspecialchars($professor->getLastNames()); ?></td>
                                                                 <td>
                                                                         <?php
-                                                                        // > EJERCICIO 2: Se formatea la fecha de yyyy-mm-dd a dd/mm/yyyy...
-                                                                        $birthDate = $professor['birthDate'];
-                                                                        // > strtotime() convierte la fecha a timestamp...
-                                                                        // > date() formatea el timestamp al formato deseado...
-                                                                        $formattedDate = date('d/m/Y', strtotime($birthDate));
+                                                                        $birthDate = $professor->getBirthDate();
+                                                                        $formattedDate = $birthDate->format('d/m/y');
                                                                         echo htmlspecialchars($formattedDate);
                                                                         ?>
                                                                 </td>
@@ -96,13 +93,13 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                                                         <!-- Botones de acción -->
                                                                         <div class="btn-group" role="group">
                                                                                 <!-- Botón Ver Detalles -->
-                                                                                <a href="?page=Professors/show&dni=<?php echo urlencode($professor['dni']); ?>" 
+                                                                                <a href="?page=Professors/show&dni=<?php echo urlencode($professor->getDni()); ?>" 
                                                                                 class="btn btn-info btn-sm" 
                                                                                 title="Ver Detalles">
                                                                                         <i class="bi bi-eye"></i>
                                                                                 </a>
                                                                                 <!-- Botón Editar -->
-                                                                                <a href="?page=Professors/edit&dni=<?php echo urlencode($professor['dni']); ?>" 
+                                                                                <a href="?page=Professors/edit&dni=<?php echo urlencode($professor->getDni()); ?>" 
                                                                                 class="btn btn-warning btn-sm" 
                                                                                 title="Editar">
                                                                                         <i class="bi bi-pencil"></i>
@@ -111,7 +108,7 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                                                                 <form method="POST" style="display: inline;" 
                                                                                         onsubmit="return confirm('¿Estás seguro de que deseas eliminar este profesor?');">
                                                                                         <input type="hidden" name="action" value="delete">
-                                                                                        <input type="hidden" name="dni" value="<?php echo htmlspecialchars($professor['dni']); ?>">
+                                                                                        <input type="hidden" name="dni" value="<?php echo htmlspecialchars($professor->getDni()); ?>">
                                                                                         <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
                                                                                                 <i class="bi bi-trash"></i>
                                                                                         </button>

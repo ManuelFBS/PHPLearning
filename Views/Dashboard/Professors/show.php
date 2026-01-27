@@ -47,17 +47,17 @@ $professor = $response['data'] ?? null;
                                                 <!-- Se muestran los datos del profesor en formato de tarjeta -->
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">DNI:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor['dni']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor->getDni()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Nombres:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor['names']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor->getNames()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Apellidos:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor['lastNames']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor->getLastNames()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
@@ -65,8 +65,8 @@ $professor = $response['data'] ?? null;
                                                         <div class="col-md-8">
                                                                 <?php
                                                                 // * Formateamos la fecha de yyyy-mm-dd a dd/mm/yyyy...
-                                                                $birthDate = $professor['birthDate'];
-                                                                $formattedDate = date('d/m/Y', strtotime($birthDate));
+                                                                $birthDate = $professor->getBirthDate();
+                                                                $formattedDate = $birthDate->format('d/m/y');
                                                                 echo htmlspecialchars($formattedDate);
                                                                 ?>
                                                         </div>
@@ -74,21 +74,21 @@ $professor = $response['data'] ?? null;
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Email:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor['email']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor->getEmail()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Teléfono:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor['phone'] ?? 'No especificado'); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor->getPhone() ?? 'No especificado'); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Materias:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor['subjects'] ?? 'No especificado'); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($professor->getSubjects() ?? 'No especificado'); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="text-end mt-4">
-                                                        <a href="?page=Professors/edit&dni=<?php echo urlencode($professor['dni']); ?>" class="btn btn-warning">
+                                                        <a href="?page=Professors/edit&dni=<?php echo urlencode($professor->getDni()); ?>" class="btn btn-warning">
                                                                 <i class="bi bi-pencil"></i> Editar
                                                         </a>
                                                         <a href="?page=Professors/list" class="btn btn-secondary">Volver</a>

@@ -64,32 +64,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <!-- DNI (solo lectura, no se puede editar) -->
                                                 <div class="col-md-6">
                                                         <label class="form-label">DNI</label>
-                                                        <input type="text" value="<?php echo htmlspecialchars($professor['dni']); ?>" class="form-control" readonly>
+                                                        <input type="text" value="<?php echo htmlspecialchars($professor->getDni()); ?>" class="form-control" readonly>
                                                         <small class="text-muted">El DNI no se puede modificar.</small>
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Correo Electrónico</label>
-                                                        <input type="email" name="email" class="form-control" required value="<?php echo htmlspecialchars($professor['email']); ?>">
+                                                        <input type="email" name="email" class="form-control" required value="<?php echo htmlspecialchars($professor->getEmail()); ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Nombres</label>
-                                                        <input type="text" name="names" class="form-control" required value="<?php echo htmlspecialchars($professor['names']); ?>">
+                                                        <input type="text" name="names" class="form-control" required value="<?php echo htmlspecialchars($professor->getNames()); ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Apellidos</label>
-                                                        <input type="text" name="lastNames" class="form-control" required value="<?php echo htmlspecialchars($professor['lastNames']); ?>">
+                                                        <input type="text" name="lastNames" class="form-control" required value="<?php echo htmlspecialchars($professor->getLastNames()); ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Fecha de Nacimiento</label>
-                                                        <input type="date" name="birthDate" class="form-control" required value="<?php echo htmlspecialchars($professor['birthDate']); ?>">
+                                                        <input type="date" name="birthDate" class="form-control" 
+                                                                required value=
+                                                                "
+                                                                <?php
+                                                                // * Formateamos la fecha de yyyy-mm-dd a dd/mm/yyyy...
+                                                                $birthDate = $professor->getBirthDate();
+                                                                $formattedDate = $birthDate->format('d/m/y');
+                                                                echo htmlspecialchars($formattedDate);
+                                                                ?>
+                                                                ">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Teléfono</label>
-                                                        <input type="text" name="phone" class="form-control" value="<?php echo htmlspecialchars($professor['phone'] ?? ''); ?>">
+                                                        <input type="text" name="phone" class="form-control" value="<?php echo htmlspecialchars($professor->getPhone() ?? ''); ?>">
                                                 </div>
                                                 <div class="col-12">
                                                         <label class="form-label">Materias que dictará</label>
-                                                        <input type="text" name="subjects" class="form-control" value="<?php echo htmlspecialchars($professor['subjects'] ?? ''); ?>" placeholder="Ej: PHP, MySQL, JavaScript">
+                                                        <input type="text" name="subjects" class="form-control" value="<?php echo htmlspecialchars($professor->getSubjects() ?? ''); ?>" placeholder="Ej: PHP, MySQL, JavaScript">
                                                 </div>
                                                 <div class="col-12 text-end mt-4">
                                                         <a href="?page=Professors/list" class="btn btn-secondary">Cancelar</a>

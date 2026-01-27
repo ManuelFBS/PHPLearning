@@ -59,7 +59,8 @@ class ProfessorRepository implements ProfessorRepositoryInterface
                                 email, 
                                 phone, 
                                 willTeachSubjects, 
-                                createdAt 
+                                createdAt, 
+                                updatedAt
                                 FROM professors';
                         $stmt = $db->prepare($query);
                         $stmt->execute();
@@ -179,19 +180,26 @@ class ProfessorRepository implements ProfessorRepositoryInterface
         // * Mapear datos de la base de datos a la entidad User...
         private function mapToEntity(array $data): Professor
         {
-                $createdAt = $data['createdAt'] ? new \DateTime($data['createdAt']) : null;
-                $updatedAt = $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
+                // $createdAt = $data['createdAt'] ? new \DateTime($data['createdAt']) : null;
+                // $updatedAt = $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
+
+                // > Convertir birthDate: si viene null, usar una fecha por defecto o lanzar excepción...
+                $birthDate = null;
+                if (!empty($data['birthDate'])) {
+                        $birthDate = new \DateTime($data['birthDate']);
+                } else {
+                        // throw new \InvalidArgumentException('La fecha de nacimiento es requerida...');
+                        $birthDate = new \DateTime('1900-01-01');
+                }
 
                 return new Professor(
                         $data['dni'],
                         $data['names'],
                         $data['lastNames'],
-                        $data['birthDate'],
+                        $birthDate,
                         $data['email'],
-                        $data['phone'],
+                        $data['phone'] ?? null,
                         $data['willTeachSubjects'],
-                        $createdAt,
-                        $updatedAt
                 );
         }
 }
