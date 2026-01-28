@@ -7,6 +7,7 @@ use Domain\UseCases\Professor\DeleteProfessorUseCase;
 use Domain\UseCases\Professor\GetAllProfessorsUseCase;
 use Domain\UseCases\Professor\GetProfessorUseCase;
 use Domain\UseCases\Professor\UpdateProfessorUseCase;
+use DateTime;
 
 class ProfessorController
 {
@@ -67,12 +68,22 @@ class ProfessorController
                         }
                 }
 
+                // > Convertir birthDate (string del formulario) a DateTime...
+                $birthDateInput = trim($_POST['birthDate']);
+                $birthDate = \DateTime::createFromFormat('Y-m-d', $birthDateInput);
+                if ($birthDate === false) {
+                        return [
+                                'status' => 'error',
+                                'message' => 'La fecha de nacimiento no es válida. Use el formato AAAA-MM-DD...'
+                        ];
+                }
+
                 // > Llamar al caso de uso...
                 $result = $this->createProfessorUseCase->execute(
                         trim($_POST['dni']),
                         trim($_POST['names']),
                         trim($_POST['lastNames']),
-                        ($_POST['birthDate']),
+                        $birthDate,
                         trim($_POST['email']),
                         trim($_POST['phone']),
                         trim($_POST['subjects']),
@@ -138,12 +149,40 @@ class ProfessorController
                         ];
                 }
 
-                $result = $this->updateProfessorUseCase->execute($dni);
+                // > Leer datos del formulario (los envía edit.php con name="...")...
+                $names = isset($_POST['names']) ? trim($_POST['names']) : null;
+                $lastNames = isset($_POST['lastNames']) ? trim($_POST['lastNames']) : null;
+                $email = isset($_POST['email']) ? trim($_POST['email']) : null;
+                $phone = isset($_POST['phone']) ? trim($_POST['phone']) : null;
+                $subjects = isset($_POST['subjects']) ? trim($_POST['subjects']) : null;
+
+                // > Fecha: el input type="date" envía Y-m-d...
+                $birthDate = null;
+                if (!empty(trim($_POST['birthDate'] ?? ''))) {
+                        $birthDate = \DateTime::createFromFormat('Y-d-m', trim($_POST[$birthDate]));
+                        if ($birthDate === false) {
+                                return [
+                                        'status' => 'error',
+                                        'message' => 'La fecha de nacimiento no es válida. Use el formato AAAA-MM-DD.',
+                                        'data' => null
+                                ];
+                        }
+                }
+
+                $result = $this->updateProfessorUseCase->execute(
+                        $dni,
+                        $names,
+                        $lastNames,
+                        $birthDate,
+                        $email,
+                        $phone,
+                        $subjects
+                );
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
                         'message' => $result['message'],
-                        'data' => $result['data']
+                        'data' => $result['data'] ?? null
                 ];
         }
 

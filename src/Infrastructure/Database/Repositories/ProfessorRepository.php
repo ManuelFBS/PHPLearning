@@ -36,7 +36,7 @@ class ProfessorRepository implements ProfessorRepositoryInterface
                                 $professor->getDni(),
                                 $professor->getNames(),
                                 $professor->getLastNames(),
-                                $professor->getBirthDate(),
+                                $professor->getBirthDate()->format('Y-m-d'),
                                 $professor->getEmail(),
                                 $professor->getPhone(),
                                 $professor->getSubjects()
@@ -122,13 +122,13 @@ class ProfessorRepository implements ProfessorRepositoryInterface
                                 WHERE dni = ?';
                         $stmt = $db->prepare($query);
                         return $stmt->execute([
-                                $professor->getDni(),
                                 $professor->getNames(),
                                 $professor->getLastNames(),
-                                $professor->getBirthDate(),
+                                $professor->getBirthDate()->format('Y-m-d'),
                                 $professor->getEmail(),
                                 $professor->getPhone(),
-                                $professor->getSubjects()
+                                $professor->getSubjects(),
+                                $professor->getDni()  // dni al final, para el WHERE...
                         ]);
                 } catch (\PDOException $e) {
                         error_log('Error en ProfessorRepository::update: ' . $e->getMessage());
