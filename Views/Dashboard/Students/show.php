@@ -47,17 +47,17 @@ $student = $response['data'] ?? null;
                                                 <!-- Se muestran los datos del estudiante en formato de tarjeta -->
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">DNI:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['dni']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($student->getDni()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Nombres:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['names']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($student->getNames()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Apellidos:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['lastNames']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($student->getLastNames()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
@@ -65,8 +65,8 @@ $student = $response['data'] ?? null;
                                                         <div class="col-md-8">
                                                                 <?php
                                                                 // * Formateamos la fecha de yyyy-mm-dd a dd/mm/yyyy...
-                                                                $birthDate = $student['birthDate'];
-                                                                $formattedDate = date('d/m/Y', strtotime($birthDate));
+                                                                $birthDate = $student->getBirthDate();
+                                                                $formattedDate = $birthDate->format('d/m/y');
                                                                 echo htmlspecialchars($formattedDate);
                                                                 ?>
                                                         </div>
@@ -74,31 +74,37 @@ $student = $response['data'] ?? null;
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Email:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['email']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($student->getEmail()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Teléfono:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['phone'] ?? 'No especificado'); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($student->getPhone() ?? 'No especificado'); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Fec. Ingreso</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['entry'] ?? 'No Especificado'); ?></div>
+                                                        <div class="col-md-8">
+                                                        <?php
+                                                        $dateEntry = $student->getDateEntry();
+                                                        $formattedDate = $dateEntry->format('d/m/y');
+                                                        echo htmlspecialchars($formattedDate);
+                                                        ?>
+                                                        </div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Materias:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['subjects'] ?? 'No especificado'); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($student->getSubjects() ?? 'No especificado'); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Semestre</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($student['semester'] ?? 'No Especificado'); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($student->getSemester() ?? 'No Especificado'); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="text-end mt-4">
-                                                        <a href="?page=Students/edit&dni=<?php echo urlencode($student['dni']); ?>" class="btn btn-warning">
+                                                        <a href="?page=Students/edit&dni=<?php echo urlencode($student->getDni()); ?>" class="btn btn-warning">
                                                                 <i class="bi bi-pencil"></i> Editar
                                                         </a>
                                                         <a href="?page=Students/list" class="btn btn-secondary">Volver</a>
