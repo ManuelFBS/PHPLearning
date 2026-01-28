@@ -177,12 +177,9 @@ class ProfessorRepository implements ProfessorRepositoryInterface
                 }
         }
 
-        // * Mapear datos de la base de datos a la entidad User...
+        // * Mapear datos de la base de datos a la entidad Professor...
         private function mapToEntity(array $data): Professor
         {
-                // $createdAt = $data['createdAt'] ? new \DateTime($data['createdAt']) : null;
-                // $updatedAt = $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
-
                 // > Convertir birthDate: si viene null, usar una fecha por defecto o lanzar excepción...
                 $birthDate = null;
                 if (!empty($data['birthDate'])) {

@@ -38,10 +38,10 @@ class StudentRepository implements StudentRepositoryInterface
                                 $student->getDni(),
                                 $student->getNames(),
                                 $student->getLastNames(),
-                                $student->getBirthDate(),
+                                $student->getBirthDate()->format('Y-m-d'),
                                 $student->getEmail(),
                                 $student->getPhone(),
-                                $student->getDateEntry(),
+                                $student->getDateEntry()->format('Y-m-d'),
                                 $student->getSubjects(),
                                 $student->getSemester()
                         ]);
@@ -131,15 +131,15 @@ class StudentRepository implements StudentRepositoryInterface
                                 WHERE dni = ?';
                         $stmt = $db->prepare($query);
                         return $stmt->execute([
-                                $student->getDni(),
                                 $student->getNames(),
                                 $student->getLastNames(),
-                                $student->getBirthDate(),
+                                $student->getBirthDate()->format('Y-m-d'),
                                 $student->getEmail(),
                                 $student->getPhone(),
-                                $student->getDateEntry(),
+                                $student->getDateEntry()->format('Y-m-d'),
                                 $student->getSubjects(),
-                                $student->getSemester()
+                                $student->getSemester(),
+                                $student->getDni()  // dni al final para el WHERE...
                         ]);
                 } catch (PDOException $e) {
                         error_log('Error en studentRepository::update: ' . $e->getMessage());
@@ -187,24 +187,30 @@ class StudentRepository implements StudentRepositoryInterface
                 }
         }
 
-        // * Mapear datos de la base de datos a la entidad User...
+        // * Mapear datos de la base de datos a la entidad Student...
         private function mapToEntity(array $data): student
         {
-                $createdAt = $data['createdAt'] ? new \DateTime($data['createdAt']) : null;
-                $updatedAt = $data['updatedAt'] ? new \DateTime($data['updatedAt']) : null;
+                // > Convertir birthDate y dateEntry: si vienen null, lanzar excepción...
+                $birthDate = null;
+                $dateEntry = null;
+                if (!empty($data['birthDate']) && !empty($data['dateEntry'])) {
+                        $birthDate = new \DateTime($data['birthDate']);
+                        $dateEntry = new \DateTime($data['dateEntry']);
+                } else {
+                        throw new \InvalidArgumentException('La fecha de nacimiento es requerida...');
+                        // $birthDate = new \DateTime('1900-01-01');
+                }
 
                 return new student(
                         $data['dni'],
                         $data['names'],
                         $data['lastNames'],
-                        $data['birthDate'],
+                        $birthDate,
                         $data['email'],
                         $data['phone'],
-                        $data['dateEntry'],
+                        $dateEntry,
                         $data['willTakeSubjects'],
                         $data['semester'],
-                        $createdAt,
-                        $updatedAt
                 );
         }
 }
