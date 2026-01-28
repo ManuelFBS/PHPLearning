@@ -159,7 +159,7 @@ class ProfessorController
                 // > Fecha: el input type="date" envía Y-m-d...
                 $birthDate = null;
                 if (!empty(trim($_POST['birthDate'] ?? ''))) {
-                        $birthDate = \DateTime::createFromFormat('Y-d-m', trim($_POST[$birthDate]));
+                        $birthDate = \DateTime::createFromFormat('Y-m-d', trim($_POST['birthDate']));
                         if ($birthDate === false) {
                                 return [
                                         'status' => 'error',

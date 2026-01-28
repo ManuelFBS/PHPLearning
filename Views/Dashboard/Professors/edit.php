@@ -81,16 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Fecha de Nacimiento</label>
+                                                        <?php
+                                                        $bd = $professor->getBirthDate();
+                                                        $birthDateValue = $bd ? $bd->format('Y-m-d') : '';
+                                                        ?>
                                                         <input type="date" name="birthDate" class="form-control" 
-                                                                required value=
-                                                                "
-                                                                <?php
-                                                                // * Formateamos la fecha de yyyy-mm-dd a dd/mm/yyyy...
-                                                                $birthDate = $professor->getBirthDate();
-                                                                $formattedDate = $birthDate->format('d/m/y');
-                                                                echo htmlspecialchars($formattedDate);
-                                                                ?>
-                                                                ">
+                                                                require value="<?= htmlspecialchars($birthDateValue) ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Teléfono</label>
