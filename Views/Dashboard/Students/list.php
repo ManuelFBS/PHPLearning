@@ -15,7 +15,7 @@ $response = $controller->getAll();
 // * Se extrae la información de la respuesta...
 $status = $response['status'];
 $message = $response['message'];
-$professors = $response['data'] ?? [];  // > Si no existe 'data', usamos un array vacío...
+$students = $response['data'] ?? [];  // > Si no existe 'data', usamos un array vacío...
 
 // * Se procesala eliminación si se envió por POST...
 if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
@@ -78,15 +78,13 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                         <tbody>
                                                 <?php foreach ($students as $student): ?>
                                                         <tr>
-                                                                <td><?php echo htmlspecialchars($student['dni']); ?></td>
-                                                                <td><?php echo htmlspecialchars($student['names']); ?></td>
-                                                                <td><?php echo htmlspecialchars($student['lastNames']); ?></td>
+                                                                <td><?php echo htmlspecialchars($student->getDni()); ?></td>
+                                                                <td><?php echo htmlspecialchars($student->getNames()); ?></td>
+                                                                <td><?php echo htmlspecialchars($student->getLastNames()); ?></td>
                                                                 <td>
                                                                         <?php
-                                                                        $birthDate = $student['birthDate'];
-                                                                        // > strtotime() convierte la fecha a timestamp...
-                                                                        // > date() formatea el timestamp al formato deseado...
-                                                                        $formattedDate = date('d/m/Y', strtotime($birthDate));
+                                                                        $birthDate = $student->getBirthDate();
+                                                                        $formattedDate = $birthDate->format('Y-m-d');
                                                                         echo htmlspecialchars($formattedDate);
                                                                         ?>
                                                                 </td>
@@ -95,13 +93,13 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                                                         <!-- Botones de acción -->
                                                                         <div class="btn-group" role="group">
                                                                                 <!-- Botón Ver Detalles -->
-                                                                                <a href="?page=Students/show&dni=<?php echo urlencode($student['dni']); ?>" 
+                                                                                <a href="?page=Students/show&dni=<?php echo urlencode($student->getDni()); ?>" 
                                                                                 class="btn btn-info btn-sm" 
                                                                                 title="Ver Detalles">
                                                                                         <i class="bi bi-eye"></i>
                                                                                 </a>
                                                                                 <!-- Botón Editar -->
-                                                                                <a href="?page=Students/edit&dni=<?php echo urlencode($student['dni']); ?>" 
+                                                                                <a href="?page=Students/edit&dni=<?php echo urlencode($student->getDni()); ?>" 
                                                                                 class="btn btn-warning btn-sm" 
                                                                                 title="Editar">
                                                                                         <i class="bi bi-pencil"></i>
@@ -110,7 +108,7 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                                                                 <form method="POST" style="display: inline;" 
                                                                                         onsubmit="return confirm('¿Estás seguro de que deseas eliminar este estudiante?');">
                                                                                         <input type="hidden" name="action" value="delete">
-                                                                                        <input type="hidden" name="dni" value="<?php echo htmlspecialchars($student['dni']); ?>">
+                                                                                        <input type="hidden" name="dni" value="<?php echo htmlspecialchars($student->getDni()); ?>">
                                                                                         <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
                                                                                                 <i class="bi bi-trash"></i>
                                                                                         </button>
