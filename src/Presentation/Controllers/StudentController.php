@@ -7,6 +7,7 @@ use Domain\UseCases\Student\DeleteStudentUseCase;
 use Domain\UseCases\Student\GetAllStudentsUseCase;
 use Domain\UseCases\Student\GetStudentUseCase;
 use Domain\UseCases\Student\UpdateStudentUseCase;
+use DateTime;
 
 class StudentController
 {
@@ -69,17 +70,29 @@ class StudentController
                         }
                 }
 
+                // > Convertir birthDate (string del formulario) a DateTime...
+                $birthDateInput = trim($_POST['birthDate']);
+                $dateEntryInput = trim($_POST['dateEntry']);
+                $birthDate = DateTime::createFromFormat('Y-m-d', $birthDateInput);
+                $dateEntry = DateTime::createFromFormat('Y-m-d', $dateEntryInput);
+                if ($birthDate === false || $dateEntry === false) {
+                        return [
+                                'status' => 'error',
+                                'message' => 'La fecha de nacimiento y/o de entrada no es(son) válida(s). Use el formato AAAA-MM-DD...'
+                        ];
+                }
+
                 // > Llamar al caso de uso...
                 $result = $this->createStudentUseCase->execute(
                         trim($_POST['dni']),
                         trim($_POST['names']),
                         trim($_POST['lastNames']),
-                        ($_POST['birthDate']),
+                        $birthDate,
                         trim($_POST['email']),
                         trim($_POST['phone']),
-                        ($_POST['dateEntry']),
+                        $dateEntry,
                         trim($_POST['subjects']),
-                        ($_POST['semester'])
+                        trim($_POST['semester'])
                 );
 
                 return [
@@ -142,12 +155,54 @@ class StudentController
                         ];
                 }
 
-                $result = $this->updateStudentUseCase->execute($dni);
+                // > Leer datos del formulario (los envía edit.php con name="...")...
+                $names = isset($_POST['names']) ? trim($_POST['names']) : null;
+                $lastNames = isset($_POST['lastNames']) ? trim($_POST['lastNames']) : null;
+                $email = isset($_POST['email']) ? trim($_POST['email']) : null;
+                $phone = isset($_POST['phone']) ? trim($_POST['phone']) : null;
+                $subjects = isset($_POST['subjects']) ? trim($_POST['subjects']) : null;
+                $semester = isset($_POST['semester']) ? trim($_POST['semester']) : null;
+
+                // > Fecha: el input type="date" envía Y-m-d...
+                $birthDate = null;
+                $dateEntry = null;
+                if (!empty(trim($_POST['birthDate'] ?? ''))) {
+                        $birthDate = DateTime::createFromFormat('Y-m-d', trim($_POST['birthDate']));
+                        if ($birthDate === false) {
+                                return [
+                                        'status' => 'error',
+                                        'message' => 'La fecha de nacimiento no es válida. Use el formato AAAA-MM-DD.',
+                                        'data' => null
+                                ];
+                        }
+                }
+                if (!empty(trim($_POST['dateEntry'] ?? ''))) {
+                        $dateEntry = DateTime::createFromFormat('Y-m-d', trim($_POST['dateEntry']));
+                        if ($dateEntry === false) {
+                                return [
+                                        'status' => 'error',
+                                        'message' => 'La fecha de entrada no es válida. Use el formato AAAA-MM-DD.',
+                                        'data' => null
+                                ];
+                        }
+                }
+
+                $result = $this->updateStudentUseCase->execute(
+                        $dni,
+                        $names,
+                        $lastNames,
+                        $birthDate,
+                        $email,
+                        $phone,
+                        $dateEntry,
+                        $subjects,
+                        $semester
+                );
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
                         'message' => $result['message'],
-                        'data' => $result['data']
+                        'data' => $result['data'] ?? null
                 ];
         }
 
