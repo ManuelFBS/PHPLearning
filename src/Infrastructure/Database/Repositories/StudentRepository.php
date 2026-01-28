@@ -31,7 +31,7 @@ class StudentRepository implements StudentRepositoryInterface
                                 willTakeSubjects, 
                                 semester, 
                                 createdAt) 
-                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())';
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())';
                         $stmt = $db->prepare($query);
 
                         return $stmt->execute([

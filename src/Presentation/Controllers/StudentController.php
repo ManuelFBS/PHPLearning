@@ -56,9 +56,9 @@ class StudentController
                         'lastNames',
                         'birthDate',
                         'email',
-                        'phone',
+                        // 'phone',
                         'dateEntry',
-                        'subjects',
+                        // 'subjects',
                         'semester'
                 ];
                 foreach ($requiredFields as $field) {

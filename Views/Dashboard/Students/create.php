@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                         <div class="col-12">
                             <label class="form-label">Materias que cursará</label>
-                            <input type="text" name="willTakeSubjects" class="form-control" placeholder="Ej: PHP, MySQL, JavaScript">
+                            <input type="text" name="subjects" class="form-control" placeholder="Ej: PHP, MySQL, JavaScript">
                         </div>
                         <div class="col-12 text-end mt-4">
                             <button type="submit" class="btn btn-primary px-4">Guardar Estudiante</button>
