@@ -49,6 +49,20 @@ class CreateStudentUseCase
                 $studentDniExists = $this->studentRepository->exists($dni);
                 $studentEmailExists = $this->studentRepository->emailExists($email);
 
+                if ($studentDniExists) {
+                        return [
+                                'success' => false,
+                                'message' => 'El DNI ya está registrado en la base de datos...'
+                        ];
+                }
+                //
+                if ($studentEmailExists) {
+                        return [
+                                'success' => false,
+                                'message' => 'El email ya está registrado en la base de datos...'
+                        ];
+                }
+
                 // > 4. Crear la entidad Student...
                 $student = new Student(
                         $dni,
