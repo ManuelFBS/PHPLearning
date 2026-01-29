@@ -4,6 +4,8 @@
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 // ~ Importar las clases necesarias usando 'namespaces'...
+
+use Domain\Entities\Student;
 use Infrastructure\Container;
 
 // * Se obtiene el DNI desde la URL...
@@ -64,40 +66,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <!-- DNI (solo lectura, no se puede editar) -->
                                                 <div class="col-md-6">
                                                         <label class="form-label">DNI</label>
-                                                        <input type="text" value="<?php echo htmlspecialchars($student['dni']); ?>" class="form-control" readonly>
+                                                        <input type="text" value="<?php echo htmlspecialchars($student->getDni()); ?>" class="form-control" readonly>
                                                         <small class="text-muted">El DNI no se puede modificar.</small>
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Correo Electrónico</label>
-                                                        <input type="email" name="email" class="form-control" required value="<?php echo htmlspecialchars($student['email']); ?>">
+                                                        <input type="email" name="email" class="form-control" required value="<?php echo htmlspecialchars($student->getEmail()); ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Nombres</label>
-                                                        <input type="text" name="names" class="form-control" required value="<?php echo htmlspecialchars($student['names']); ?>">
+                                                        <input type="text" name="names" class="form-control" required value="<?php echo htmlspecialchars($student->getNames()); ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Apellidos</label>
-                                                        <input type="text" name="lastNames" class="form-control" required value="<?php echo htmlspecialchars($student['lastNames']); ?>">
+                                                        <input type="text" name="lastNames" class="form-control" required value="<?php echo htmlspecialchars($student->getLastNames()); ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Fecha de Nacimiento</label>
-                                                        <input type="date" name="birthDate" class="form-control" required value="<?php echo htmlspecialchars($student['birthDate']); ?>">
+                                                        <?php
+                                                        $bd = $student->getBirthDate();
+                                                        $birthDateValue = $bd ? $bd->format('Y-m-d') : '';
+                                                        ?>
+                                                        <input type="date" name="birthDate" class="form-control" 
+                                                                required value="<?php echo htmlspecialchars($birthDateValue); ?>">
                                                 </div>
                                                 <div class="col-md-6">
                                                         <label class="form-label">Teléfono</label>
-                                                        <input type="text" name="phone" class="form-control" value="<?php echo htmlspecialchars($student['phone'] ?? ''); ?>">
+                                                        <input type="text" name="phone" class="form-control" value="<?php echo htmlspecialchars($student->getPhone() ?? ''); ?>">
                                                 </div>
                                                 <div class="col-12">
                                                         <label class="form-label">Fecha de Ingreso</label>
-                                                        <input type="text" name="entry" class="form-control" value="<?php echo htmlspecialchars($student['entry']); ?>">
+                                                        <?php
+                                                        $de = $student->getDateEntry();
+                                                        $dateEntryValue = $de ? $de->format('Y-m-d') : '';
+                                                        ?>
+                                                        <input type="text" name="dateEntry" class="form-control" 
+                                                                required value="<?php echo htmlspecialchars($dateEntryValue); ?>">
                                                 </div>
                                                 <div class="col-12">
                                                         <label class="form-label">Materias que cursará</label>
-                                                        <input type="text" name="subjects" class="form-control" value="<?php echo htmlspecialchars($student['subjects'] ?? ''); ?>" placeholder="Ej: PHP, MySQL, JavaScript">
+                                                        <input type="text" name="subjects" class="form-control" value="<?php echo htmlspecialchars($student->getSubjects() ?? ''); ?>" placeholder="Ej: PHP, MySQL, JavaScript">
                                                 </div>
                                                 <div class="col-12">
                                                         <label class="form-label">Semestre</label>
-                                                        <input type="number" name="semester" class="form-control" value="<?php echo htmlspecialchars($student['semester'] ?? ''); ?>">
+                                                        <input type="number" name="semester" class="form-control" value="<?php echo htmlspecialchars($student->getSemester() ?? ''); ?>">
                                                 </div>
                                                 <div class="col-12 text-end mt-4">
                                                         <a href="?page=Students/list" class="btn btn-secondary">Cancelar</a>
