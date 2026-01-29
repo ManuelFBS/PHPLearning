@@ -127,14 +127,20 @@ class UserController
                         ];
                 }
 
-                $role = trim($_POST['role'] ?? '');
-                $password = $_POST['password'] ?? null;
+                // $role = trim($_POST['role'] ?? '');
+                $role = isset($_POST['role']) ? trim($_POST['role']) : null;
+                // $password = $_POST['password'] ?? null;
+                $password = isset($_POST['password']) ? $_POST['password'] : null;
 
-                $result = $this->updateUserUseCase->execute($username, $role, $password);
+                $result = $this->updateUserUseCase->execute(
+                        $username,
+                        $role,
+                        $password
+                );
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
-                        'message' => $result['message']
+                        'message' => $result['data'] ?? null
                 ];
         }
 
