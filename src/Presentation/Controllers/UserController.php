@@ -127,20 +127,20 @@ class UserController
                         ];
                 }
 
-                // $role = trim($_POST['role'] ?? '');
                 $role = isset($_POST['role']) ? trim($_POST['role']) : null;
-                // $password = $_POST['password'] ?? null;
-                $password = isset($_POST['password']) ? $_POST['password'] : null;
+                // > Si el campo viene vacío o solo espacios, no se cambia la contraseña (null)
+                $passwordRaw = isset($_POST['password']) ? trim($_POST['password']) : '';
+                $password = $passwordRaw !== '' ? $passwordRaw : null;
 
                 $result = $this->updateUserUseCase->execute(
                         $username,
-                        $role,
-                        $password
+                        $password,
+                        $role
                 );
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
-                        'message' => $result['data'] ?? null
+                        'message' => $result['message'] ?? ''
                 ];
         }
 

@@ -1,9 +1,10 @@
 <?php
 
-// ~ Cargar el autoload de Composer (si no está ya cargado)
+// ~ Cargar el autoload de Composer (si no está ya cargado)...
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 // ~ Importar las clases necesarias usando 'namespaces'...
+use Domain\Entities\User;
 use Infrastructure\Container;
 
 // * Se obtiene el nombre de usuario desde la URL (ejemplo: ?page=Users/edit&user=usuarioabcd)...
@@ -19,7 +20,7 @@ if (empty($userName)) {
 $controller = Container::getUserController();
 
 // * Primero se obtienen los datos actuales del usuario para llenar el
-$response = $controller->update($userName);
+$response = $controller->show($userName);
 $user = $response['data'] ?? null;
 
 // * Si no existe el usuario, se muestra un error...
@@ -65,14 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                 <!-- Campo DNI (solo lectura, no se puede editar) -->
                                                 <div class="col-md-6">
                                                         <label class="form-label fw-bold">DNI</label>
-                                                        <input type="text" value="<?php echo htmlspecialchars($user['dni']); ?>" class="form-control" readonly>
+                                                        <input type="text" value="<?php echo htmlspecialchars($user->getDni()); ?>" class="form-control" readonly>
                                                         <small class="text-muted">El DNI no se puede modificar.</small>
                                                 </div>
 
                                                 <!-- Campo Usuario (solo lectura, no se puede editar) -->
                                                 <div class="col-md-6">
                                                         <label class="form-label fw-bold">Nombre de Usuario</label>
-                                                        <input type="text" value="<?php echo htmlspecialchars($user['user']); ?>" class="form-control" readonly>
+                                                        <input type="text" value="<?php echo htmlspecialchars($user->getUsername()); ?>" class="form-control" readonly>
                                                         <small class="text-muted">El nombre de usuario no se puede modificar.</small>
                                                 </div>
 
@@ -81,9 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         <label for="role" class="form-label fw-bold">Rol <span class="text-danger">*</span></label>
                                                         <select name="role" id="role" class="form-select" required>
                                                                 <option value="">Seleccione un rol...</option>
-                                                                <option value="Admin" <?= $user['role'] === 'Admin' ? 'selected' : '' ?>>Admin</option>
-                                                                <option value="Professor" <?= $user['role'] === 'Professor' ? 'selected' : '' ?>>Professor</option>
-                                                                <option value="Student" <?= $user['role'] === 'Student' ? 'selected' : '' ?>>Student</option>
+                                                                <option value="Admin" <?= $user->getRole() === 'Admin' ? 'selected' : '' ?>>Admin</option>
+                                                                <option value="Professor" <?= $user->getRole() === 'Professor' ? 'selected' : '' ?>>Professor</option>
+                                                                <option value="Student" <?= $user->getRole() === 'Student' ? 'selected' : '' ?>>Student</option>
                                                         </select>
                                                         <small class="text-muted">Seleccione el rol del usuario en el sistema.</small>
                                                 </div>
@@ -103,8 +104,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         <label class="form-label fw-bold">Fecha de Creación</label>
                                                         <input type="text" value="
                                                         <?php
-                                                        $created = $user['createdAt'];
-                                                        $formattedDate = date('d/m/Y H:i', strtotime($created));
+                                                        $created = $user->getCreatedAt();
+                                                        $formattedDate = $created->format('d/m/Y H:i');
                                                         echo htmlspecialchars($formattedDate);
                                                         ?>" class="form-control" readonly>
                                                 </div>
@@ -113,8 +114,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         <label class="form-label fw-bold">Última Actualización</label>
                                                         <input type="text" value=" 
                                                         <?php
-                                                        $updated = $user['updatedAt'];
-                                                        $formattedDate = date('d/m/Y H:i', strtotime($updated));
+                                                        $updated = $user->getUpdatedAt();
+                                                        $formattedDate = $updated->format('d/m/Y H:i');
                                                         echo htmlspecialchars($formattedDate);
                                                         ?>" class="form-control" readonly>
                                                 </div>
