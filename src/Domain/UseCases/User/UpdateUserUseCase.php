@@ -56,7 +56,7 @@ class UpdateUserUseCase
                 if ($newPassword !== null) {
                         try {
                                 // Se usa el método de negocio de la entidad que ya valida la contraseña...
-                                $user->changePassword($newPassword);
+                                $user->updatePassword($newPassword);
                         } catch (\InvalidArgumentException $e) {
                                 return [
                                         'success' => false,
@@ -70,7 +70,7 @@ class UpdateUserUseCase
                 if ($newRole !== null) {
                         try {
                                 // Se usa el método de negocio de la entidad que ya valida el rol...
-                                $user->changeRole($newRole);
+                                $user->updateRole($newRole);
                         } catch (\InvalidArgumentException $e) {
                                 // Si la validación falla, retornamos el error...
                                 return [
