@@ -1,15 +1,15 @@
 <?php
 
-// ~ Cargar el autoload de Composer (si no está ya cargado)
+// ~ Cargar el autoload de Composer (si no está ya cargado)...
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-// ~ Importar las clases necesarias usando namespaces
+// ~ Importar las clases necesarias usando namespaces...
 use Infrastructure\Container;
 
-// * Se obtiene el DNI desde la URL (ejemplo: ?page=users_show&userName=usuarioabcd)...
+// * Se obtiene el user desde la URL (ejemplo: ?page=users_show&userName=usuarioabcd)...
 $userName = $_GET['user'] ?? '';
 
-// * Si NO hay DNI, se muestra un error...
+// * Si NO hay user, se muestra un error...
 if (empty($userName)) {
         echo '<div class="alert alert-danger">Usuario no proporcionado...</div>';
         exit;
@@ -48,26 +48,26 @@ $user = $response['data'] ?? null;
                                                 <!-- Se muestran los datos del usuario en formato de tarjeta -->
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">DNI:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($user['dni']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($user->getDni()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Usuario:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($user['user']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($user->getUsername()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Rol:</div>
-                                                        <div class="col-md-8"><?php echo htmlspecialchars($user['role']); ?></div>
+                                                        <div class="col-md-8"><?php echo htmlspecialchars($user->getRole()); ?></div>
                                                 </div>
                                                 <hr>
                                                 <div class="row mb-3">
                                                         <div class="col-md-4 fw-bold">Creado:</div>
                                                         <div class="col-md-8">
                                                                 <?php
-                                                                // * Formateamos la fecha de yyyy-mm-dd a dd/mm/yyyy...
-                                                                $created = $user['createdAt'];
-                                                                $formattedDate = date('d/m/Y', strtotime($created));
+                                                                // * Formateamos la fecha de yyyy-mm-dd a dd/mm/YY...
+                                                                $created = $user->getCreatedAt();
+                                                                $formattedDate = $created->format('d/m/Y');
                                                                 echo htmlspecialchars($formattedDate);
                                                                 ?>
                                                         </div>
@@ -77,16 +77,16 @@ $user = $response['data'] ?? null;
                                                         <div class="col-md-4 fw-bold">Actualizado:</div>
                                                         <div class="col-md-8">
                                                                 <?php
-                                                                // * Formateamos la fecha de yyyy-mm-dd a dd/mm/yyyy...
-                                                                $updated = $user['updatedAt'];
-                                                                $formattedDate = date('d/m/Y', strtotime($updated));
+                                                                // * Formateamos la fecha de yyyy-mm-dd a dd/mm/YY...
+                                                                $updated = $user->getUpdatedAt();
+                                                                $formattedDate = $updated->format('d/m/Y');
                                                                 echo htmlspecialchars($formattedDate);
                                                                 ?>
                                                         </div>
                                                 </div>
                                                 <hr>
                                                 <div class="text-end mt-4">
-                                                        <a href="?page=Users/edit&user=<?php echo urlencode($user['user']); ?>" class="btn btn-warning">
+                                                        <a href="?page=Users/edit&user=<?php echo urlencode($user->getUsername()); ?>" class="btn btn-warning">
                                                                 <i class="bi bi-pencil"></i> Editar
                                                         </a>
                                                         <a href="?page=Users/list" class="btn btn-secondary">Volver</a>
