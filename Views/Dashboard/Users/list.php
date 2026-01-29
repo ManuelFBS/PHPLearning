@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use Infrastructure\Container;
 
 // ~ Obtener el controlador desde el Container (Inyección de Dependencias)...
-$controller = Container::getStudentController();
+$controller = Container::getUserController();
 
 // ~ Se llama el método getAll() del controlador (es un método de instancia, no estático)...
 $response = $controller->getAll();
@@ -15,7 +15,7 @@ $response = $controller->getAll();
 // * Se extrae la información de la respuesta...
 $status = $response['status'];
 $message = $response['message'];
-$professors = $response['data'] ?? [];  // > Si no existe 'data', usamos un array vacío...
+$users = $response['data'] ?? [];  // > Si no existe 'data', usamos un array vacío...
 
 // * Se procesa la eliminación si se envió por POST...
 if ($_SERVER['REQUEST_METHOD'] === 'POST' &&
@@ -59,7 +59,7 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                         <?php echo htmlspecialchars($message); ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <?php if (empty($userData)): ?>
+                <?php if (empty($users)): ?>
                          <!-- Si no hay usuarios en la base de datos -->
                         <p>No hay usuarios registrados todavía.</p>
                 <?php else: ?>
@@ -75,16 +75,14 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                                 </tr>
                                         </thead>
                                         <tbody>
-                                                <?php foreach ($userData as $user): ?>
+                                                <?php foreach ($users as $user): ?>
                                                         <tr>
-                                                                <td><?php echo htmlspecialchars($user['dni']) ?></td>
-                                                                <td><?php echo htmlspecialchars($user['user']) ?></td>
+                                                                <td><?php echo htmlspecialchars($user->getDni()) ?></td>
+                                                                <td><?php echo htmlspecialchars($user->getUsername()) ?></td>
                                                                 <td>
                                                                         <?php
-                                                                        $createdAt = $user['createdAt'];
-                                                                        // > strtotime() convierte la fecha a timestamp...
-                                                                        // > date() formatea el timestamp al formato deseado...
-                                                                        $formattedDate = date('d/m/Y', strtotime($createdAt));
+                                                                        $createdAt = $user->getCreatedAt();
+                                                                        $formattedDate = $createdAt->format('Y-m-d');
                                                                         echo htmlspecialchars($formattedDate);
                                                                         ?>
                                                                 </td>
@@ -93,13 +91,13 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                                                         <!-- Botones de acción -->
                                                                         <div class="btn-group" role="group">
                                                                                 <!-- Botón Ver Detalles -->
-                                                                                <a href="?page=Users/show&user=<?php echo urlencode($user['user']); ?>" 
+                                                                                <a href="?page=Users/show&user=<?php echo urlencode($user->getUsername()); ?>" 
                                                                                 class="btn btn-info btn-sm" 
                                                                                 title="Ver Detalles">
                                                                                         <i class="bi bi-eye"></i>
                                                                                 </a>
                                                                                 <!-- Botón Editar -->
-                                                                                <a href="?page=Users/edit&user=<?php echo urlencode($user['user']); ?>" 
+                                                                                <a href="?page=Users/edit&user=<?php echo urlencode($user->getUsername()); ?>" 
                                                                                 class="btn btn-warning btn-sm" 
                                                                                 title="Editar">
                                                                                         <i class="bi bi-pencil"></i>
@@ -108,7 +106,7 @@ if (isset($_GET['deleted']) && $_GET['deleted'] == 1) {
                                                                                 <form  method="POST" style="display: inline;" 
                                                                                         onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
                                                                                         <input type="hidden" name="action" value="delete">
-                                                                                        <input type="hidden" name="user" value="<?php echo htmlspecialchars($user['user']); ?>">
+                                                                                        <input type="hidden" name="user" value="<?php echo htmlspecialchars($user->getUsername()); ?>">
                                                                                         <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
                                                                                                 <i class="bi bi-trash"></i>
                                                                                         </button>
