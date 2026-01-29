@@ -41,8 +41,9 @@ class UserRepository implements UserRepositoryInterface
         {
                 try {
                         $db = $this->connection->connect();
-                        $query = 'SELECT dni, user, password, role, createdAt, updatedAt 
-                      FROM users WHERE user = ?';
+                        $query = 'SELECT 
+                                dni, user, password, role, createdAt, updatedAt 
+                                FROM users WHERE user = ?';
                         $stmt = $db->prepare($query);
                         $stmt->execute([$username]);
                         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -82,7 +83,8 @@ class UserRepository implements UserRepositoryInterface
         {
                 try {
                         $db = $this->connection->connect();
-                        $query = 'SELECT dni, user, password, role, createdAt, updatedAt FROM users';
+                        $query = 'SELECT dni, user, password, role, createdAt, updatedAt 
+                                FROM users';
                         $stmt = $db->prepare($query);
                         $stmt->execute();
                         $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
@@ -103,8 +105,8 @@ class UserRepository implements UserRepositoryInterface
         {
                 try {
                         $db = $this->connection->connect();
-                        $query = 'UPDATE users SET role = ?, password = ?, updatedAt = NOW() 
-                      WHERE user = ?';
+                        $query = 'UPDATE users 
+                                SET role = ?, password = ?, updatedAt = NOW() WHERE user = ?';
                         $stmt = $db->prepare($query);
                         return $stmt->execute([
                                 $user->getRole(),
