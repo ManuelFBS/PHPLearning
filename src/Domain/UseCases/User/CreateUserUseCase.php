@@ -42,7 +42,7 @@ class CreateUserUseCase
                         ];
                 }
 
-                // 2. Validar username...
+                // > 2. Validar username...
                 if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
                         return [
                                 'success' => false,
