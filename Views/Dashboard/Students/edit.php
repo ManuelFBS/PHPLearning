@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         $de = $student->getDateEntry();
                                                         $dateEntryValue = $de ? $de->format('Y-m-d') : '';
                                                         ?>
-                                                        <input type="text" name="dateEntry" class="form-control" 
+                                                        <input type="text" name="dateentry" class="form-control" 
                                                                 required value="<?php echo htmlspecialchars($dateEntryValue); ?>">
                                                 </div>
                                                 <div class="col-12">

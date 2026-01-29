@@ -2,6 +2,9 @@
 
 session_start();
 
+// ~ Configuración de errores para desarrollo (debe ir al inicio)...
+require_once __DIR__ . '/../src/Infrastructure/Config/error_config.php';
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Infrastructure\Container;
