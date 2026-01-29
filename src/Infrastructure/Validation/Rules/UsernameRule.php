@@ -1,0 +1,5 @@
+<?php
+
+// ~ Validadores reutilizables...
+
+?>
