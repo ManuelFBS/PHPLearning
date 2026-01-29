@@ -73,7 +73,7 @@ class User
         /**
          * > Método de negocio: Cambiar la contraseña...
          */
-        public function changePassword(string $newPassword): void
+        public function updatePassword(string $newPassword): void
         {
                 if (strlen($newPassword) < 8) {
                         throw new \InvalidArgumentException('La contraseña debe tener al menos 8 caracteres...');
@@ -85,7 +85,7 @@ class User
         /**
          * > Método de negocio: Cambiar el rol...
          */
-        public function changeRole(string $newRole): void
+        public function updateRole(string $newRole): void
         {
                 $allowedRoles = ['Admin', 'Professor', 'Student'];
 
