@@ -2,6 +2,9 @@
 
 namespace Presentation\Controllers;
 
+use Domain\DTOs\User\CreateUserDTO;
+use Domain\DTOs\User\UpdateUserDTO;
+use Domain\DTOs\ValidationResult;
 use Domain\UseCases\User\CreateUserUseCase;
 use Domain\UseCases\User\DeleteUserUseCase;
 use Domain\UseCases\User\GetAllUsersUseCase;
@@ -32,7 +35,7 @@ class UserController
 
         public function store(): array
         {
-                // > Verificar permisos...
+                // > 1. Verificar permisos...
                 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Admin') {
                         return [
                                 'status' => 'error',
@@ -40,7 +43,7 @@ class UserController
                         ];
                 }
 
-                // > Verificar método HTTP...
+                // > 2. Verificar método HTTP...
                 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                         return [
                                 'status' => 'error',
@@ -48,24 +51,19 @@ class UserController
                         ];
                 }
 
-                // > Validar campos requeridos...
-                $requiredFields = ['dni', 'user', 'password', 'role'];
-                foreach ($requiredFields as $field) {
-                        if (!isset($_POST["$field"]) || empty(trim($_POST[$field]))) {
-                                return [
-                                        'status' => 'error',
-                                        'message' => "El campo '$field' es obligatorio..."
-                                ];
-                        }
+                // > 3. Crear y validar el DTO desde la petición...
+                [$dto, $validationResult] = CreateUserDTO::fromRequest($_POST);
+
+                if (!$validationResult->isValid()) {
+                        return [
+                                'status' => 'error',
+                                'message' => $validationResult->getFirstError(),
+                                'errors' => $validationResult->getErrors()
+                        ];
                 }
 
-                // > Llamar al caso de uso...
-                $result = $this->createUserUseCase->execute(
-                        trim($_POST['dni']),
-                        trim($_POST['user']),
-                        $_POST['password'],
-                        trim($_POST['role']),
-                );
+                // > 4. Llamar al caso de uso con el DTO ya validado...
+                $result = $this->createUserUseCase->execute($dto);
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
@@ -127,15 +125,22 @@ class UserController
                         ];
                 }
 
-                $role = isset($_POST['role']) ? trim($_POST['role']) : null;
-                // > Si el campo viene vacío o solo espacios, no se cambia la contraseña (null)
-                $passwordRaw = isset($_POST['password']) ? trim($_POST['password']) : '';
-                $password = $passwordRaw !== '' ? $passwordRaw : null;
+                // > Crear y validar el DTO desde la petición (password y role opcionales)...
+                [$dto, $validationResult] = UpdateUserDTO::fromRequest($_POST);
 
+                if (!$validationResult->isValid()) {
+                        return [
+                                'status' => 'error',
+                                'message' => $validationResult->getFirstError(),
+                                'errors' => $validationResult->getErrors()
+                        ];
+                }
+
+                // > Llamar al caso de uso con los datos ya validados...
                 $result = $this->updateUserUseCase->execute(
                         $username,
-                        $password,
-                        $role
+                        $dto->getPassword(),
+                        $dto->getRole()
                 );
 
                 return [
