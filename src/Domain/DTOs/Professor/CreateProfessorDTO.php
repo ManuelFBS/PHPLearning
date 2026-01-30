@@ -5,8 +5,8 @@ namespace Domain\DTOs\Professor;
 use Domain\DTOs\ValidationResult;
 
 /**
- * ~ DTO para la creación de un profesor...
- * ~ Centraliza los datos de entrada y sus validaciones (formato y reglas básicas).
+ * * DTO para la creación de un profesor...
+ * * Centraliza los datos de entrada y sus validaciones (formato y reglas básicas).
  */
 final class CreateProfessorDTO
 {
@@ -110,14 +110,14 @@ final class CreateProfessorDTO
                                 . ' caracteres';
                 }
                 if (strlen($lastNames) <
-                        self::NAMES_MIN_LENGTH ||
+                        self::NAMES_LENGTH_MIN ||
                         strlen($lastNames) >
-                                self::NAMES_MAX_LENGTH) {
+                                self::NAMES_LENGTH_MAX) {
                         $errors['lastNames'] =
                                 'Los apellidos deben tener entre '
-                                . self::NAMES_MIN_LENGTH
+                                . self::NAMES_LENGTH_MIN
                                 . ' y '
-                                . self::NAMES_MAX_LENGTH
+                                . self::NAMES_LENGTH_MAX
                                 . ' caracteres.';
                 }
 
