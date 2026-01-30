@@ -2,6 +2,7 @@
 
 namespace Domain\UseCases\User;
 
+use Domain\DTOs\User\CreateUserDTO;
 use Domain\Entities\User;
 use Domain\Repositories\ProfessorRepositoryInterface;
 use Domain\Repositories\StudentRepositoryInterface;
@@ -28,46 +29,14 @@ class CreateUserUseCase
         }
 
         // * Ejecutar el caso de uso...
-        public function execute(
-                string $dni,
-                string $username,
-                string $password,
-                string $role
-        ): array {
-                // > 1. Validar DNI...
-                if (!preg_match('/^\d{8,10}$/', $dni)) {
-                        return [
-                                'success' => false,
-                                'message' => 'El DNI debe contener entre 8 y 10 dígitos numéricos'
-                        ];
-                }
+        public function execute(CreateUserDTO $dto): array
+        {
+                $dni = $dto->getDni();
+                $username = $dto->getUsername();
+                $password = $dto->getPassword();
+                $role = $dto->getRole();
 
-                // > 2. Validar username...
-                if (!preg_match('/^[a-zA-Z0-9_]{3,20}$/', $username)) {
-                        return [
-                                'success' => false,
-                                'message' => 'El nombre de usuario debe tener entre 3 y 20 caracteres'
-                        ];
-                }
-
-                // > 3. Validar password...
-                if (strlen($password) < 8) {
-                        return [
-                                'success' => false,
-                                'message' => 'La contraseña debe tener al menos 8 caracteres'
-                        ];
-                }
-
-                // > 4. Validar rol...
-                $allowedRoles = ['Admin', 'Professor', 'Student'];
-                if (!in_array($role, $allowedRoles, true)) {
-                        return [
-                                'success' => false,
-                                'message' => 'Rol no válido'
-                        ];
-                }
-
-                // > 5. Verificar que el DNI exista en profesores o estudiantes...
+                // > 1. Verificar que el DNI exista en profesores o estudiantes...
                 $professorExists = $this->professorRepository->exists($dni);
                 $studentExists = $this->studentRepository->exists($dni);
 
@@ -78,7 +47,7 @@ class CreateUserUseCase
                         ];
                 }
 
-                // > 6. Verificar que no exista ya el usuario...
+                // > 2. Verificar que no exista ya el usuario...
                 if ($this->userRepository->exists($dni, $username)) {
                         return [
                                 'success' => false,
@@ -86,17 +55,18 @@ class CreateUserUseCase
                         ];
                 }
 
-                // > 7. Crear la entidad User...
+                // > 3. Crear la entidad User...
                 $passwordHash = password_hash($password, PASSWORD_BCRYPT);
                 $user = new User(
                         $dni,
                         $username,
                         $passwordHash,
                         $role,
-                        new \DateTime(), null
+                        new \DateTime(),
+                        null
                 );
 
-                // > 8. Guardar en el repositorio...
+                // > 4. Guardar en el repositorio...
                 $result = $this->userRepository->save($user);
 
                 if ($result) {
