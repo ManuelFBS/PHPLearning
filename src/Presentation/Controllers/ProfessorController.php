@@ -2,12 +2,13 @@
 
 namespace Presentation\Controllers;
 
+use Domain\DTOs\Professor\CreateProfessorDTO;
+use Domain\DTOs\Professor\UpdateProfessorDTO;
 use Domain\UseCases\Professor\CreateProfessorUseCase;
 use Domain\UseCases\Professor\DeleteProfessorUseCase;
 use Domain\UseCases\Professor\GetAllProfessorsUseCase;
 use Domain\UseCases\Professor\GetProfessorUseCase;
 use Domain\UseCases\Professor\UpdateProfessorUseCase;
-use DateTime;
 
 class ProfessorController
 {
@@ -33,7 +34,7 @@ class ProfessorController
 
         public function store(): array
         {
-                // > Verificar permisos...
+                // > 1. Verificar permisos...
                 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Admin') {
                         return [
                                 'status' => 'error',
@@ -41,7 +42,7 @@ class ProfessorController
                         ];
                 }
 
-                // > Verificar método HTTP...
+                // > 2. Verificar método HTTP...
                 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                         return [
                                 'status' => 'error',
@@ -49,45 +50,19 @@ class ProfessorController
                         ];
                 }
 
-                // > Validar campos requeridos...
-                $requiredFields = [
-                        'dni',
-                        'names',
-                        'lastNames',
-                        'birthDate',
-                        'email',
-                        'phone',
-                        'subjects'
-                ];
-                foreach ($requiredFields as $field) {
-                        if (!isset($_POST[$field]) || empty(trim($_POST[$field]))) {
-                                return [
-                                        'status' => 'error',
-                                        'message' => "El campo '$field' es obligatorio..."
-                                ];
-                        }
-                }
+                // > 3. Efectuar validaciones...
+                [$dto, $validationResult] = CreateProfessorDTO::fromRequest($_POST);
 
-                // > Convertir birthDate (string del formulario) a DateTime...
-                $birthDateInput = trim($_POST['birthDate']);
-                $birthDate = \DateTime::createFromFormat('Y-m-d', $birthDateInput);
-                if ($birthDate === false) {
+                if (!$validationResult->isValid()) {
                         return [
                                 'status' => 'error',
-                                'message' => 'La fecha de nacimiento no es válida. Use el formato AAAA-MM-DD...'
+                                'message' => $validationResult->getFirstError(),
+                                'errors' => $validationResult->getErrors()
                         ];
                 }
 
-                // > Llamar al caso de uso...
-                $result = $this->createProfessorUseCase->execute(
-                        trim($_POST['dni']),
-                        trim($_POST['names']),
-                        trim($_POST['lastNames']),
-                        $birthDate,
-                        trim($_POST['email']),
-                        trim($_POST['phone']),
-                        trim($_POST['subjects']),
-                );
+                // > 4. Llamar al caso de uso...
+                $result = $this->createProfessorUseCase->execute($dto);
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
