@@ -2,11 +2,12 @@
 
 namespace Domain\UseCases\Professor;
 
+use Domain\DTOs\Professor\UpdateProfessorDTO;
 use Domain\Repositories\ProfessorRepositoryInterface;
 
 /**
  * ~ Caso de uso: Actualizar un profesor...
- * ~ Maneja las validaciones de negocio antes de ejecutar los cambios....
+ * ~ Recibe el DNI (identificador de ruta) y un DTO ya validado con los campos a actualizar...
  */
 class UpdateProfessorUseCase
 {
@@ -19,42 +20,33 @@ class UpdateProfessorUseCase
         }
 
         /**
-         * Run the update use case.
+         * * Ejecuta la actualización del profesor.
          *
-         * @param string $dni Es requerido el dni del professor
-         * @param string|null $names Opcional
-         * @param string|null $lastNames Opcional
-         * @param \DateTime|null $birthDate Opcional
-         * @param string|null $email Opcional
-         * @param string|null $phone Opcional
-         * @param string|null $subjects Opcional
+         * @param string $dni DNI del profesor a actualizar (viene de la ruta).
+         * @param UpdateProfessorDTO $dto Datos ya validados; todos los campos son opcionales.
          * @return array ['success' => bool, 'message' => string, 'data' => Professor|null]
          */
         public function execute(
                 string $dni,
-                ?string $names = null,
-                ?string $lastNames = null,
-                ?\DateTime $birthDate = null,
-                ?string $email = null,
-                ?string $phone = null,
-                ?string $subjects = null
+                UpdateProfessorDTO $dto
         ): array {
                 // > 1. Validar formato del DNI...
                 if (!preg_match('/^\d{8,10}$/', $dni)) {
                         return [
                                 'success' => false,
-                                'message' => 'El DNI debe contener entre 8 y 10 dígitos numéricos'
+                                'message' => 'El DNI debe contener entre 8 y 10 dígitos numéricos',
+                                'data' => null
                         ];
                 }
 
-                // > 2. Proveer al menos un campo para actualizar...
+                // > 2. Comprobar que al menos un campo venga en el DTO para actualizar...
                 if (
-                        $names === null &&
-                        $lastNames === null &&
-                        $birthDate === null &&
-                        $email === null &&
-                        $phone === null &&
-                        $subjects === null
+                        $dto->getNames() === null &&
+                        $dto->getLastNames() === null &&
+                        $dto->getBirthDate() === null &&
+                        $dto->getEmail() === null &&
+                        $dto->getPhone() === null &&
+                        $dto->getSubjects() === null
                 ) {
                         return [
                                 'success' => false,
@@ -75,26 +67,26 @@ class UpdateProfessorUseCase
 
                 // > 4. Validaciones y actualizaciones usando las reglas de la entidad...
                 try {
-                        if ($names !== null) {
-                                $professor->updateNames($names);
+                        if ($dto->getNames() !== null) {
+                                $professor->updateNames($dto->getNames());
                         }
-                        if ($lastNames !== null) {
-                                $professor->updateLastNames($lastNames);
+                        if ($dto->getLastNames() !== null) {
+                                $professor->updateLastNames($dto->getLastNames());
                         }
-                        if ($birthDate !== null) {
-                                $professor->updateBirthDate($birthDate);
+                        if ($dto->getBirthDate() !== null) {
+                                $professor->updateBirthDate($dto->getBirthDate());
                         }
-                        if ($email !== null) {
-                                $professor->updateEmail($email);
+                        if ($dto->getEmail() !== null) {
+                                $professor->updateEmail($dto->getEmail());
                         }
-                        if ($phone !== null) {
-                                $professor->updatePhone($phone);
+                        if ($dto->getPhone() !== null) {
+                                $professor->updatePhone($dto->getPhone());
                         }
-                        if ($subjects !== null) {
-                                $professor->updateSubjects($subjects);
+                        if ($dto->getSubjects() !== null) {
+                                $professor->updateSubjects($dto->getSubjects());
                         }
                 } catch (\InvalidArgumentException $e) {
-                        // Muestra los errores de validación con un mensaje amigable...
+                        // > Muestra los errores de validación con un mensaje amigable...
                         return [
                                 'success' => false,
                                 'message' => $e->getMessage(),
