@@ -136,15 +136,7 @@ class ProfessorController
                 }
 
                 // > Llamar al caso de uso con los datos ya validados...
-                $result = $this->updateProfessorUseCase->execute(
-                        $dni,
-                        $dto->getNames(),
-                        $dto->getLastNames(),
-                        $dto->getBirthDate(),
-                        $dto->getEmail(),
-                        $dto->getPhone(),
-                        $dto->getSubjects()
-                );
+                $result = $this->updateProfessorUseCase->execute($dni, $dto);
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
