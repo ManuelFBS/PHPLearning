@@ -124,34 +124,26 @@ class ProfessorController
                         ];
                 }
 
-                // > Leer datos del formulario (los envía edit.php con name="...")...
-                $names = isset($_POST['names']) ? trim($_POST['names']) : null;
-                $lastNames = isset($_POST['lastNames']) ? trim($_POST['lastNames']) : null;
-                $email = isset($_POST['email']) ? trim($_POST['email']) : null;
-                $phone = isset($_POST['phone']) ? trim($_POST['phone']) : null;
-                $subjects = isset($_POST['subjects']) ? trim($_POST['subjects']) : null;
+                // > Crear y validar el DTO desde la petición...
+                [$dto, $validationResult] = UpdateProfessorDTO::fromRequest($_POST);
 
-                // > Fecha: el input type="date" envía Y-m-d...
-                $birthDate = null;
-                if (!empty(trim($_POST['birthDate'] ?? ''))) {
-                        $birthDate = \DateTime::createFromFormat('Y-m-d', trim($_POST['birthDate']));
-                        if ($birthDate === false) {
-                                return [
-                                        'status' => 'error',
-                                        'message' => 'La fecha de nacimiento no es válida. Use el formato AAAA-MM-DD.',
-                                        'data' => null
-                                ];
-                        }
+                if (!$validationResult->isValid()) {
+                        return [
+                                'status' => 'error',
+                                'message' => $validationResult->getFirstError(),
+                                'errors' => $validationResult->getErrors()
+                        ];
                 }
 
+                // > Llamar al caso de uso con los datos ya validados...
                 $result = $this->updateProfessorUseCase->execute(
                         $dni,
-                        $names,
-                        $lastNames,
-                        $birthDate,
-                        $email,
-                        $phone,
-                        $subjects
+                        $dto->getNames(),
+                        $dto->getLastNames(),
+                        $dto->getBirthDate(),
+                        $dto->getEmail(),
+                        $dto->getPhone(),
+                        $dto->getSubjects()
                 );
 
                 return [
