@@ -137,11 +137,7 @@ class UserController
                 }
 
                 // > Llamar al caso de uso con los datos ya validados...
-                $result = $this->updateUserUseCase->execute(
-                        $username,
-                        $dto->getPassword(),
-                        $dto->getRole()
-                );
+                $result = $this->updateUserUseCase->execute($username, $dto);
 
                 return [
                         'status' => $result['success'] ? 'success' : 'error',
