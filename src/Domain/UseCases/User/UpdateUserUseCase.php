@@ -2,11 +2,12 @@
 
 namespace Domain\UseCases\User;
 
+use Domain\DTOs\User\UpdateUserDTO;
 use Domain\Repositories\UserRepositoryInterface;
 
 /**
  * ~ Caso de uso: Actualizar un usuario...
- * ~ Contiene toda la lógica de negocio para actualizar usuarios...
+ * ~ Recibe el 'user' (identificador de ruta) y un DTO ya validado con los campos a actualizar...
  * ~ Cambios de contraseña o del rol de un usuario (únicamente)...
  */
 class UpdateUserUseCase
@@ -19,17 +20,15 @@ class UpdateUserUseCase
         }
 
         /**
-         * * Ejecutar el caso de uso de actualización...
+         * * Ejecuta la actualización del user.
          *
-         * @param string $username Nombre de usuario a actualizar
-         * @param string|null $newPassword Nueva contraseña (opcional)
-         * @param string|null $newRole Nuevo rol (opcional)
-         * @return array ['success' => bool, 'message' => string, 'data' => User|null]
+         * @param string $username user del usuario a actualizar (viene de la ruta).
+         * @param UpdateUserDTO $dto Datos ya validados; password y role son opcionales.
+         * @return array ['success' => bool, 'message' => string, 'data' => Professor|null]
          */
         public function execute(
                 string $username,
-                ?string $newPassword = null,
-                ?string $newRole = null
+                UpdateUserDTO $dto
         ): array {
                 // > 1. Buscar el usuario por su nombre de usuario...
                 $user = $this->userRepository->findByUsername($username);
@@ -44,7 +43,10 @@ class UpdateUserUseCase
                 }
 
                 // > 3. Validar que al menos un campo se va a actualizar...
-                if ($newPassword === null && $newRole === null) {
+                if (
+                        $dto->getPassword() === null &&
+                        $dto->getRole() === null
+                ) {
                         return [
                                 'success' => false,
                                 'message' => 'Debe proporcionar al menos un campo para actualizar (password o rol)...',
@@ -52,40 +54,31 @@ class UpdateUserUseCase
                         ];
                 }
 
-                // > 4. Intentar actualizar la contraseña si se proporciona...
-                if ($newPassword !== null) {
-                        try {
-                                // Se usa el método de negocio de la entidad que ya valida la contraseña...
-                                $user->updatePassword($newPassword);
-                        } catch (\InvalidArgumentException $e) {
-                                return [
-                                        'success' => false,
-                                        'message' => $e->getMessage(),
-                                        'data' => null
-                                ];
-                        }
-                }
+                // > 4. Buscar la entidad...
+                $user = $this->userRepository->findByUsername($username);
 
-                // > 5. Intentar actualizar el rol si se proporciona...
-                if ($newRole !== null) {
-                        try {
-                                // Se usa el método de negocio de la entidad que ya valida el rol...
-                                $user->updateRole($newRole);
-                        } catch (\InvalidArgumentException $e) {
-                                // Si la validación falla, retornamos el error...
-                                return [
-                                        'success' => false,
-                                        'message' => $e->getMessage(),
-                                        'data' => null
-                                ];
+                // > 5. Validaciones y actualizaciones usando las reglas de la entidad...
+                try {
+                        if ($dto->getPassword() !== null) {
+                                $user->updatePassword($dto->getPassword());
                         }
+                        if ($dto->getRole() !== null) {
+                                $user->updateRole($dto->getRole());
+                        }
+                } catch (\InvalidArgumentException $e) {
+                        // > Muestra los errores de validación con un mensaje amigable...
+                        return [
+                                'success' => false,
+                                'message' => $e->getMessage(),
+                                'data' => null,
+                        ];
                 }
 
                 // > 6. Guardar los cambios en el repositorio...
-                $updateResult = $this->userRepository->update($user);
+                $updated = $this->userRepository->update($user);
 
                 // > 7. Verificar si la actualización fue exitosa...
-                if ($updateResult) {
+                if ($updated) {
                         return [
                                 'success' => true,
                                 'message' => 'Usuario actualizado correctamente...',
