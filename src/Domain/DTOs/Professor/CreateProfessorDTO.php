@@ -24,7 +24,7 @@ final class CreateProfessorDTO
         private ?string $phone;
         private string $subjects;
 
-        private function __construct(
+        public function __construct(
                 string $dni,
                 string $names,
                 string $lastNames,
